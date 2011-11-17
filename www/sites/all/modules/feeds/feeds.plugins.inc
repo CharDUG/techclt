@@ -96,6 +96,17 @@ function _feeds_feeds_plugins() {
       'path' => $path,
     ),
   );
+  $info['FeedsSyndicationParserMeetup'] = array(
+    'name' => 'Common syndication parser for meetup.com',
+    'description' => 'Parse RSS and Atom feeds on meetup.com.',
+    'help' => 'Parse meetup.com XML feeds in RSS 1, RSS 2 and Atom format.',
+    'handler' => array(
+      'parent' => 'FeedsParser',
+      'class' => 'FeedsSyndicationParserMeetup',
+      'file' => 'FeedsSyndicationParserMeetup.inc',
+      'path' => $path,
+    ),
+  );
   $info['FeedsOPMLParser'] = array(
     'name' => 'OPML parser',
     'description' => 'Parse OPML files.',
