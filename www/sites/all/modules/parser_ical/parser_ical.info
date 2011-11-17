@@ -1,0 +1,23 @@
+name = iCal parser
+description = Provides an iCal parser for Feeds module. Requires PHP 5.3
+package = Feeds
+dependencies[] = feeds
+dependencies[] = date
+dependencies[] = date_api
+dependencies[] = libraries
+files[] = parser_ical.module
+files[] = includes/ParserIcal.inc
+files[] = includes/ParserIcalDate.inc
+files[] = includes/ParserIcalCreator.inc
+files[] = tests/parser_ical.test
+files[] = tests/parser_ical_text.test
+files[] = tests/parser_ical_date.test
+core = 7.x
+php = 5.3
+
+; Information added by drupal.org packaging script on 2011-09-09
+version = "7.x-2.x-dev"
+core = "7.x"
+project = "parser_ical"
+datestamp = "1315570424"
+
