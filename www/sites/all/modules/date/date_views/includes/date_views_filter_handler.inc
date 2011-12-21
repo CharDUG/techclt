@@ -1,9 +1,8 @@
 <?php
-// $Id: date_views_filter_handler.inc,v 1.7 2011/01/20 13:07:24 karens Exp $
 /**
  * @file
  * A flexible, configurable date filter.
- * This filter combines multiple date filters into a single filter 
+ * This filter combines multiple date filters into a single filter
  * where all fields are controlled by the same date and can be combined with either AND or OR.
  */
 
@@ -33,7 +32,7 @@ class date_views_filter_handler extends date_views_filter_handler_simple {
     $this->get_query_fields();
     if (!empty($this->query_fields)) {
 
-      // If we don't add a dummy where clause and there is no other filter defined for this view, 
+      // If we don't add a dummy where clause and there is no other filter defined for this view,
       // Views will dump in an invalid WHERE () in addition to our custom filters, so give it a valid value.
       // @TODO This is probably the wrong way to solve this problem.
       if (empty($this->query->where[$this->options['group']]['conditions'])) {
@@ -48,7 +47,7 @@ class date_views_filter_handler extends date_views_filter_handler_simple {
           $this->related_table_alias = $this->query->queue_table($field['table_name'], $this->relationship);
         }
         $table_alias = !empty($this->related_table_alias) ? $this->related_table_alias : $field['table_name'];
-        $query_field['field']['fullname'] = $table_alias .'.'. $query_field['field']['field_name'];
+        $query_field['field']['fullname'] = $table_alias . '.' . $query_field['field']['field_name'];
         parent::op_between($query_field['field']['fullname']);
       }
     }
@@ -59,7 +58,7 @@ class date_views_filter_handler extends date_views_filter_handler_simple {
     $this->get_query_fields();
     if (!empty($this->query_fields)) {
 
-      // If we don't add a dummy where clause and there is no other filter defined for this view, 
+      // If we don't add a dummy where clause and there is no other filter defined for this view,
       // Views will dump in an invalid WHERE () in addition to our custom filters, so give it a valid value.
       // @TODO This is probably the wrong way to solve this problem.
       if (empty($this->query->where[$this->options['group']]['conditions'])) {
@@ -79,7 +78,7 @@ class date_views_filter_handler extends date_views_filter_handler_simple {
           $this->related_table_alias = NULL;
         }
         $table_alias = !empty($this->related_table_alias) ? $this->related_table_alias : $field['table_name'];
-        $query_field['field']['fullname'] = $table_alias .'.'. $query_field['field']['field_name'];
+        $query_field['field']['fullname'] = $table_alias . '.' . $query_field['field']['field_name'];
         parent::op_simple($query_field['field']['fullname']);
       }
     }
@@ -168,6 +167,8 @@ class date_views_filter_handler extends date_views_filter_handler_simple {
       if (array_key_exists($name, $fields) && $field = $fields[$name]) {
         $date_handler = new date_sql_handler($field['sql_type'], date_default_timezone());
         $date_handler->granularity = $this->options['granularity'];
+        $date_handler->db_timezone = date_get_timezone_db($field['tz_handling']);
+        $date_handler->local_timezone = date_get_timezone($field['tz_handling']);
         $this->query_fields[] = array('field' => $field, 'date_handler' => $date_handler);
       }
     }
