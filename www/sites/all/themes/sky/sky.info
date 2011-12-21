@@ -1,0 +1,191 @@
+
+;----------// Theme Information
+  name        = Sky
+  description = A minimal, re-colorable theme for Drupal 7 that uses HTML5 and <a href="http://drupal.org/project/adaptivetheme">Adaptivetheme 7.x-2.x</a> base theme.
+  core        = 7.x
+  engine      = phptemplate
+  screenshot  = screenshot.png
+  base theme  = adaptivetheme
+
+;----------// Stylesheets
+  stylesheets[all][]   = css/html-elements.css
+  stylesheets[all][]   = css/forms.css
+  stylesheets[all][]   = css/tables.css
+  stylesheets[all][]   = css/page.css
+  stylesheets[all][]   = css/articles.css
+  stylesheets[all][]   = css/comments.css
+  stylesheets[all][]   = css/fields.css
+  stylesheets[all][]   = css/blocks.css
+  stylesheets[all][]   = css/navigation.css
+  stylesheets[all][]   = color/colors.css
+  stylesheets[all][]   = css/sky.settings.style.css
+  stylesheets[print][] = css/print.css
+
+;----------// Scripts
+  scripts[] = js/scripts.js
+
+;----------// Regions
+  regions[sidebar_first]     = Sidebar first
+  regions[sidebar_second]    = Sidebar second
+  regions[content]           = Main content
+  regions[highlighted]       = Highlighted
+  regions[content_aside]     = Content bottom panel
+  regions[header]            = Header
+  regions[menu_bar]          = Menu bar
+  regions[top_menu]          = Top menu bar
+  regions[secondary_content] = Secondary panel
+  regions[tertiary_content]  = Tertiary panel
+  regions[four_first]        = Footer panel 1
+  regions[four_second]       = Footer panel 2
+  regions[four_third]        = Footer panel 3
+  regions[four_fourth]       = Footer panel 4
+  regions[footer]            = Footer
+  regions[collapsible]       = Collapsible
+  regions[help]              = Help
+  regions[page_top]          = Page top
+  regions[page_bottom]       = Page bottom
+
+;----------// Site Features
+  features[] = logo
+  features[] = name
+  features[] = slogan
+  features[] = node_user_picture
+  features[] = comment_user_picture
+  features[] = comment_user_verification
+  features[] = favicon
+
+;----------// Theme Settings
+
+  ; Layout settings
+
+  ; Standard bigscreen
+  settings[bigscreen_layout]         = 'three-col-grail'
+  settings[bigscreen_page_unit]      = 'px'
+  settings[bigscreen_sidebar_unit]   = 'px'
+  settings[bigscreen_max_width_unit] = 'px'
+  settings[bigscreen_page_width]     = 960
+  settings[bigscreen_sidebar_first]  = 180
+  settings[bigscreen_sidebar_second] = 180
+  settings[bigscreen_set_max_width]  = 0
+  settings[bigscreen_max_width]      = 1260
+  settings[bigscreen_media_query]    = 'only screen and (min-width:1025px)'
+
+  ; Tablet landscape
+  settings[tablet_landscape_layout]         = 'three-col-grail'
+  settings[tablet_landscape_page_unit]      = 'px'
+  settings[tablet_landscape_sidebar_unit]   = 'px'
+  settings[tablet_landscape_max_width_unit] = 'px'
+  settings[tablet_landscape_page_width]     = 960
+  settings[tablet_landscape_sidebar_first]  = 180
+  settings[tablet_landscape_sidebar_second] = 180
+  settings[tablet_landscape_set_max_width]  = 0
+  settings[tablet_landscape_max_width]      = 960
+  settings[tablet_landscape_media_query]    = 'only screen and (min-width:769px) and (max-width:1024px)'
+
+  ; Tablet portrait
+  settings[tablet_portrait_layout]         = 'one-col-vert'
+  settings[tablet_portrait_page_unit]      = '%'
+  settings[tablet_portrait_sidebar_unit]   = '%'
+  settings[tablet_portrait_max_width_unit] = 'px'
+  settings[tablet_portrait_page_width]     = 100
+  settings[tablet_portrait_sidebar_first]  = 50
+  settings[tablet_portrait_sidebar_second] = 50
+  settings[tablet_portrait_set_max_width]  = 0
+  settings[tablet_portrait_max_width]      = 780
+  settings[tablet_portrait_media_query]    = 'only screen and (min-width:481px) and (max-width:768px)'
+
+  ; smartphone landscape
+  settings[smartphone_landscape_layout]         = 'one-col-vert'
+  settings[smartphone_landscape_page_unit]      = '%'
+  settings[smartphone_landscape_sidebar_unit]   = '%'
+  settings[smartphone_landscape_max_width_unit] = 'px'
+  settings[smartphone_landscape_page_width]     = 100
+  settings[smartphone_landscape_sidebar_first]  = 50
+  settings[smartphone_landscape_sidebar_second] = 50
+  settings[smartphone_landscape_set_max_width]  = 0
+  settings[smartphone_landscape_max_width]      = 520
+  settings[smartphone_landscape_media_query]    = 'only screen and (min-width:321px) and (max-width:480px)'
+
+  ; smartphone portrait
+  settings[smartphone_portrait_media_query] = 'only screen and (max-width:320px)'
+
+  ; Breadcrumb
+  settings[breadcrumb_display]   = 'yes'
+  settings[breadcrumb_separator] = ' &#187; '
+  settings[breadcrumb_home]      = 0
+
+  ; Search
+  settings[display_search_form_label] = 1
+  settings[search_snippet]            = 1
+  settings[search_info_type]          = 1
+  settings[search_info_user]          = 1
+  settings[search_info_date]          = 1
+  settings[search_info_comment]       = 1
+  settings[search_info_upload]        = 1
+  settings[search_info_separator]     = ' - '
+
+  ; Login block options
+  settings[horizontal_login_block]        = 0
+  settings[horizontal_login_block_enable] = 'on'
+
+  ; Comments
+  settings[comments_hide_title] = 0
+
+  ; Style settings
+  settings[style_enable_schemes] = 'off'
+  settings[style_schemes]        = 'style-default.css'
+
+  ; Extra CSS classes
+  settings[extra_page_classes]      = 1
+  settings[extra_article_classes]   = 1
+  settings[extra_comment_classes]   = 1
+  settings[extra_block_classes]     = 1
+  settings[extra_menu_classes]      = 1
+  settings[extra_item_list_classes] = 1
+
+  ; Extra markup
+  settings[menu_item_span_elements] = 0
+
+  ; Fonts
+  settings[base_font_type]          = 'wsf'
+  settings[site_name_font_type]     = 'wsf'
+  settings[site_slogan_font_type]   = 'wsf'
+  settings[page_title_font_type]    = 'wsf'
+  settings[node_title_font_type]    = 'wsf'
+  settings[comment_title_font_type] = 'wsf'
+  settings[block_title_font_type]   = 'wsf'
+  settings[base_font]               = 'bf-l'
+  settings[site_name_font]          = 'snf-a'
+  settings[site_slogan_font]        = 'ssf-a'
+  settings[page_title_font]         = 'ptf-a'
+  settings[node_title_font]         = 'ntf-a'
+  settings[comment_title_font]      = 'ctf-a'
+  settings[block_title_font]        = 'btf-a'
+  settings[font_size]               = 'fs-medium'
+
+  ; Heading styles
+  settings[headings_styles_caps]   = 0
+  settings[headings_styles_weight] = 0
+  settings[headings_styles_shadow] = 0
+
+  ; Border radius
+  settings[tabs_corner_radius]    = 'rct-8'
+
+  ; Box shadows and textures
+  settings[box_shadows]     = 'bs-n'
+  settings[body_background] = 'bb-n'
+
+  ; Image field settings
+  settings[image_alignment]      = 'ia-r'
+  settings[image_caption_teaser] = 0
+  settings[image_caption_full]   = 0
+
+  ; Menu bullets
+  settings[menu_bullets] = 'mb-dd'
+
+; Information added by drupal.org packaging script on 2011-12-10
+version = "7.x-2.3"
+core = "7.x"
+project = "sky"
+datestamp = "1323543945"
+
