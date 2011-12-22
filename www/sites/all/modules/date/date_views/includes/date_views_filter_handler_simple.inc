@@ -17,6 +17,8 @@ class date_views_filter_handler_simple extends views_handler_filter_date {
       if (!empty($field) && !empty($field['type'])) {
         $this->date_handler->date_type = $field['type'];
       }
+      $this->date_handler->db_timezone = date_get_timezone_db($field['settings']['tz_handling']);
+      $this->date_handler->local_timezone = date_get_timezone($field['settings']['tz_handling']);
     }
     $this->form_submitted = FALSE;
     $this->date_handler->granularity = isset($options['granularity']) ? $options['granularity'] : 'day';
@@ -46,7 +48,9 @@ class date_views_filter_handler_simple extends views_handler_filter_date {
     // If this is a remembered value, use the value from the SESSION.
     if (!empty($this->options['expose']['remember'])) {
       $display_id = ($this->view->display_handler->is_defaulted('filters')) ? 'default' : $this->view->current_display;
-      return $_SESSION['views'][$this->view->name][$display_id]['date_filter'][$prefix];
+      if (!empty($_SESSION['views'][$this->view->name][$display_id]['date_filter'][$prefix])) {
+        return $_SESSION['views'][$this->view->name][$display_id]['date_filter'][$prefix];
+      }
     }
 
     // This is a date that needs to be constructed from options like 'now' .
@@ -104,12 +108,8 @@ class date_views_filter_handler_simple extends views_handler_filter_date {
 
   }
 
-  function pre_query() {
-    // Setting the offset to avoid trying to use timezone adjustments for dates that don't need it.
-    $this->offset = in_array($this->date_handler->granularity, array('hour', 'minute', 'sec')) ? NULL : 0;
-  }
-
   function op_between($field) {
+
     // Add the delta field to the view so we can later find the value that matched our query.
     list($table_name, $field_name) = explode('.', $field);
     if (!empty($this->options['add_delta']) && (substr($field_name, -6) == '_value' || substr($field_name, -7) == '_value2')) {
@@ -118,7 +118,7 @@ class date_views_filter_handler_simple extends views_handler_filter_date {
 
     $min_value = $this->get_filter_value('min', $this->value['min']);
     $max_value = $this->get_filter_value('max', $this->value['max']);
-    $field = $this->date_handler->sql_field($field, $this->offset);
+    $field = $this->date_handler->sql_field($field);
     $field = $this->date_handler->sql_format($this->format, $field);
     $placeholder_min = $this->placeholder();
     $placeholder_max = $this->placeholder();
@@ -132,6 +132,7 @@ class date_views_filter_handler_simple extends views_handler_filter_date {
   }
 
   function op_simple($field) {
+
     // Add the delta field to the view so we can later find the value that matched our query.
     list($table_name, $field_name) = explode('.', $field);
     if (!empty($this->options['add_delta']) && (substr($field_name, -6) == '_value' || substr($field_name, -7) == '_value2')) {
@@ -139,7 +140,7 @@ class date_views_filter_handler_simple extends views_handler_filter_date {
     }
 
     $value = $this->get_filter_value('value', $this->value['value']);
-    $field = $this->date_handler->sql_field($field, $this->offset);
+    $field = $this->date_handler->sql_field($field);
     $field = $this->date_handler->sql_format($this->format, $field);
     $placeholder = $this->placeholder();
     $group = !empty($this->options['date_group']) ? $this->options['date_group'] : $this->options['group'];
@@ -178,15 +179,7 @@ class date_views_filter_handler_simple extends views_handler_filter_date {
 
   function extra_options_form(&$form, &$form_state) {
     parent::extra_options_form($form, $form_state);
-     $form['add_delta'] = array(
-      '#type' => 'radios',
-      '#title' => t('Add multiple value identifier'),
-      '#default_value' => $this->options['add_delta'],
-      '#options' => array('' => t('No'), 'yes' => t('Yes')),
-      '#description' => t('Add an identifier to the view to show which multiple value date fields meet the filter criteria. Note: This option may introduce duplicate values into the view. Required when using multiple value fields in a Calendar or any time you want the node view of multiple value dates to display only the values that match the view filters.'),
-      );
-
-     $form['form_type'] = array(
+    $form['form_type'] = array(
       '#type' => 'radios',
       '#title' => t('Date selection form element'),
       '#default_value' => $this->options['form_type'],
@@ -199,6 +192,19 @@ class date_views_filter_handler_simple extends views_handler_filter_date {
     $form['year_range'] = array(
       '#type' => 'date_year_range',
       '#default_value' => $this->options['year_range'],
+    );
+
+    if (!empty($this->definition['field_name'])) {
+      $field = field_info_field($this->definition['field_name']);
+    }
+    $form['add_delta'] = array(
+      '#type' => 'radios',
+      '#title' => t('Add multiple value identifier'),
+      '#default_value' => $this->options['add_delta'],
+      '#options' => array('' => t('No'), 'yes' => t('Yes')),
+      '#description' => t('Add an identifier to the view to show which multiple value date fields meet the filter criteria. Note: This option may introduce duplicate values into the view. Required when using multiple value fields in a Calendar or any time you want the node view of multiple value dates to display only the values that match the view filters.'),
+      // Only let mere mortals tweak this setting for multi-value fields
+      '#access' => $field['cardinality'] != 1,
     );
   }
 
@@ -268,7 +274,7 @@ class date_views_filter_handler_simple extends views_handler_filter_date {
    */
   function date_parts_form($form_state, $prefix, $source, $which, $operator_values, $identifier, $relative_id) {
     module_load_include('inc', 'date_api', 'date_api_elements');
-    switch($prefix) {
+    switch ($prefix) {
       case 'min':
         $label = t('Start date');
         $relative_label = t('Relative start date');
@@ -278,7 +284,7 @@ class date_views_filter_handler_simple extends views_handler_filter_date {
         $relative_label = t('Relative end date');
         break;
       default:
-        $label = t('Date value');
+        $label = '';
         $relative_label = t('Relative date');
         break;
     }
@@ -297,7 +303,7 @@ class date_views_filter_handler_simple extends views_handler_filter_date {
       $default_date = $this->date_default_value($prefix);
       $id = 'edit-' . str_replace('_', '-', $this->field) . '-' . $prefix;
       $form[$prefix] = array(
-        '#title' => $label,
+        '#title' => check_plain($label),
         '#type' => $type,
         '#size' => 20,
         '#default_value' => !empty($this->value[$prefix]) ? $this->value[$prefix] : $default_date,
@@ -315,11 +321,6 @@ class date_views_filter_handler_simple extends views_handler_filter_date {
       if (!isset($form_state['input'][$identifier][$prefix])) {
         $form_state['input'][$identifier][$prefix] = $this->value[$prefix];
       }
-      // Add relative value as non-editable.
-      $form[$relative_id] = array(
-        '#type' => 'value',
-        '#value' => $relative_value,
-      );
     }
     else {
       // UI when the date selector is on the views configuration screen.
@@ -330,7 +331,7 @@ class date_views_filter_handler_simple extends views_handler_filter_date {
         '#attributes' => array('class' => array('date-views-filter-fieldset')),
       );
       $form[$prefix . '_group'][$prefix . '_choose_input_type'] = array(
-        '#title' => $label,
+        '#title' => check_plain($label),
         '#type' => 'select',
         '#options' => array('date' => t('Select a date'), 'relative' => ('Enter a relative date')),
         '#attributes' => array('class' => array($prefix . '-choose-input-type')),
@@ -355,7 +356,7 @@ class date_views_filter_handler_simple extends views_handler_filter_date {
       );
       $form[$prefix . '_group'][$relative_id] = array(
         '#type' => 'textfield',
-        '#title' => $relative_label,
+        '#title' => check_plain($relative_label),
         '#default_value' => $relative_value,
         '#description' => t("Relative dates are computed when the view is displayed. Examples: now, now +1 day, 12AM today, Monday next week. <a href=\"@relative_format\">More examples of relative date formats in the PHP documentation</a>.", array('@relative_format' => 'http://www.php.net/manual/en/datetime.formats.relative.php')),
         '#states' => array(
@@ -433,7 +434,7 @@ class date_views_filter_handler_simple extends views_handler_filter_date {
       }
     }
     // Flatten the form structure for views, so the values can be saved.
-    foreach(array('value', 'min', 'max') as $key) {
+    foreach (array('value', 'min', 'max') as $key) {
       $options['value'][$key] = $options['value'][$key . '_group'][$key];
     }
   }
