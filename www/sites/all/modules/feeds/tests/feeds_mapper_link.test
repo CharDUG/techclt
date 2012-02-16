@@ -32,27 +32,27 @@ class FeedsMapperLinkTestCase extends FeedsMapperTestCase {
     $typename = $this->createContentType(array(), array(
       'alpha' => array(
         'type' => 'link_field',
-        'instance_settings' => array(
-          'instance[settings][title]' => 'required',
+        'settings' => array(
+          'field[settings][title]' => 'required',
         ),
       ),
       'beta' => array(
         'type' => 'link_field',
-        'instance_settings' => array(
-          'instance[settings][title]' => 'none',
+        'settings' => array(
+          'field[settings][title]' => 'none',
         ),
       ),
       'gamma' => array(
         'type' => 'link_field',
-        'instance_settings' => array(
-          'instance[settings][title]' => 'optional',
+        'settings' => array(
+          'field[settings][title]' => 'optional',
         ),
       ),
       'omega' => array(
       'type' => 'link_field',
-        'instance_settings' => array(
-          'instance[settings][title]' => 'value',
-          'instance[settings][title_value]' => $static_title,
+        'settings' => array(
+          'field[settings][title]' => 'value',
+          'field[settings][title_value]' => $static_title,
         ),
       ),
     ));
