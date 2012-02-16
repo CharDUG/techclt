@@ -1,0 +1,29 @@
+<?php
+/**
+ * @file feeds_meetup.module
+ * Support Meetup RSS event feeds
+ */
+
+/**
+ * Implements hook_feeds_plugins().
+ */
+function feeds_meetup_feeds_plugins() {
+  $info = array();
+  $info['MeetupParser'] = array(
+    'name' => 'Meetup parser',
+    'description' => 'Parse Meetup RSS.',
+    'help' => 'Parse event date from meetup description.',
+    'handler' => array(
+      'parent' => 'FeedsParser', // Being directly or indirectly an extension of FeedsParser makes a plugin a parser plugin.
+      'class' => 'MeetupParser',
+      'file' => 'MeetupParser.inc',
+      'path' => drupal_get_path('module', 'feeds_meetup'),
+    ),
+    );
+  return $info;
+}
+
+function feeds_meetup_enable() {
+  //clear the cache to display in Feeds as available plugin.
+  cache_clear_all('plugins:feeds:plugins', 'cache');
+}
