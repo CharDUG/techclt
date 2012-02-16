@@ -1,0 +1,6 @@
+name = Feeds Meetup
+description = Meetup Event RSS Support
+dependencies[] = feeds
+package = Feeds
+core = 7.x
+files[] = feeds_meetup.module
