@@ -11,12 +11,12 @@ class MeetupParser extends FeedsParser {
    * Implements FeedsParser::parse().
    */
   public function parse(FeedsSource $source, FeedsFetcherResult $fetcher_result) {
-    // feeds_include_library('common_syndication_parser.inc', 'common_syndication_parser');
+    feeds_include_library('common_syndication_parser.inc', 'common_syndication_parser');
     $feed = common_syndication_parser_parse($fetcher_result->getRaw());
     $result = new FeedsParserResult();
     $result->title = $feed['title'];
     $result->description = $feed['description'];
-    //$result->timestamp = '1327317711';
+    $result->timestamp = '1327317711';
     $result->link = $feed['link'];
     if (is_array($feed['items'])) {
       foreach ($feed['items'] as $item) {
