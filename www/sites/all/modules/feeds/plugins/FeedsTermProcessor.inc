@@ -83,7 +83,7 @@ class FeedsTermProcessor extends FeedsProcessor {
   public function configForm(&$form_state) {
     $options = array(0 => t('Select a vocabulary'));
     foreach (taxonomy_get_vocabularies() as $vocab) {
-      $options[$vocab->machine_name] = check_plain($vocab->name);
+      $options[$vocab->machine_name] = $vocab->name;
     }
     $form = parent::configForm($form_state);
     $form['vocabulary'] = array(
