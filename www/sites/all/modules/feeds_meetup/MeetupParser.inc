@@ -24,7 +24,7 @@ class MeetupParser extends FeedsParser {
 	$timestamp_from_description = $matches[1];
 	
 	// convert to unix timestamp
-	$timestamp_from_description = strtotime($timestamp_from_description . ', ' . date(Y));
+	$timestamp_from_description = strtotime(ereg_replace("at", date(Y), $timestamp_from_description));
 	
     $result->timestamp = $timestamp_from_description;
     $result->link = $feed['link'];
