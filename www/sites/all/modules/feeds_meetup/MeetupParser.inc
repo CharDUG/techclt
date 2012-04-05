@@ -16,22 +16,6 @@ class MeetupParser extends FeedsParser {
     $result = new FeedsParserResult();
     $result->title = $feed['title'];
     $result->description = $feed['description'];
-	
-	// // get date from description
-	// 	$timestamp_from_description = $feed['description'];
-	// 	dsm($timestamp_from_description);
-	// 	
-	// 	preg_match('(January|February|March|April|May|June|July|August|September|October|November|December) \d{1,2} at \d{1,2}:\d{2} (AM|PM)',
-	// 	    $timestamp_from_description, $matches);
-	// 	$timestamp_from_description = $matches[0];
-	// 	dsm($timestamp_from_description);
-	// 	
-	// 	// convert to unix timestamp
-	// 	$timestamp_from_description = strtotime(ereg_replace("at", date("Y"), $timestamp_from_description));
-	// 	dsm($timestamp_from_description);	
-	// 	
-	//     $result->timestamp = $timestamp_from_description;
-	
     $result->link = $feed['link'];
     if (is_array($feed['items'])) {
       foreach ($feed['items'] as $item) {
@@ -50,18 +34,10 @@ class MeetupParser extends FeedsParser {
         
 		// get date from description
 		$timestamp_from_description = $item['description'];
-		dsm($timestamp_from_description);
-	
-		// $subject = "abcdef";
-		// 		$pattern = '/^def/';
-		// 		preg_match($pattern, $subject, $matches, PREG_OFFSET_CAPTURE, 3);
-		// 		print_r($matches);
 	
 		$pattern = '/(January|February|March|April|May|June|July|August|September|October|November|December) \d{1,2} at \d{1,2}:\d{2} (AM|PM)/';
 		preg_match($pattern, $timestamp_from_description, $matches);
-		dsm($matches);
 		$timestamp_from_description = $matches[0];
-		dsm($timestamp_from_description);
 	
 		// convert to unix timestamp
 		$day_of_the_year = date("z");
@@ -73,7 +49,6 @@ class MeetupParser extends FeedsParser {
 		}
 		
 		$timestamp_from_description = strtotime(ereg_replace("at", $event_year, $timestamp_from_description));
-		dsm($timestamp_from_description);
 		
 		$item["timestamp"] = $timestamp_from_description;
 		
@@ -81,8 +56,6 @@ class MeetupParser extends FeedsParser {
       }
     }
 	
-	
-	dsm($result);
     return $result;
   }
 
