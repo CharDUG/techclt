@@ -21,12 +21,13 @@ class MeetupParser extends FeedsParser {
 	$timestamp_from_description = $feed['description'];
 	preg_match('(January|February|March|April|May|June|July|August|September|October|November|December) \d{1,2} at \d{1,2}:\d{2} (AM|PM)',
 	    $timestamp_from_description, $matches);
-	$timestamp_from_description = $matches[1];
+	$timestamp_from_description = $matches[0];
 	
 	// convert to unix timestamp
-	$timestamp_from_description = strtotime(ereg_replace("at", date(Y), $timestamp_from_description));
+	$timestamp_from_description = strtotime(ereg_replace("at", date("Y"), $timestamp_from_description));
 	
     $result->timestamp = $timestamp_from_description;
+	
     $result->link = $feed['link'];
     if (is_array($feed['items'])) {
       foreach ($feed['items'] as $item) {
