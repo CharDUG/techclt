@@ -53,7 +53,7 @@ class MeetupParser extends FeedsParser {
         $result->items[] = $item;
       }
     }
-    dsm($result);
+    
     return $result;
   }
 
