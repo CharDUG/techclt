@@ -1,0 +1,45 @@
+;-=[Theme Information]=-------------------
+
+  name        = techCLT
+  description = The techCLT theme
+  core        = 7.x
+  screenshot  = screenshot.png
+
+;-=[ Stylesheets ]=-----------------------
+
+  stylesheets[all][]   = css/960.css
+  stylesheets[all][]   = css/style.css
+  stylesheets[all][]   = css/techclt.css
+  stylesheets[all][]   = http://fonts.googleapis.com/css?family=Vast+Shadow
+
+;-=[ Scripts ]=---------------------------
+
+  scripts[] = js/scripts.js
+  scripts[] = js/plugins.js
+
+;-=[ Regions ]=---------------------------
+
+  regions[header] = Header
+  regions[highlighted] = Highlighted
+  regions[help] = Help
+  regions[content] = Content
+  regions[sidebar_first] = Left sidebar
+  regions[sidebar_second] = Right sidebar
+  regions[footer] = Footer
+
+;-=[ Features ]=--------------------------
+
+  features[] = logo
+  features[] = name
+  features[] = slogan
+  features[] = node_user_picture
+  features[] = comment_user_picture
+  features[] = favicon
+  features[] = main_menu
+  features[] = secondary_menu
+
+;-=[ Fonts ]=-----------------------------
+
+fonts[google_fonts_api][] = "Lato&subset=latin#400"
+fonts[google_fonts_api][] = "Playball&subset=latin#400"
+fonts[google_fonts_api][] = "Vast Shadow&subset=latin#regular"
