@@ -15,6 +15,7 @@ class MeetupParser extends FeedsParser {
     $feed = common_syndication_parser_parse($fetcher_result->getRaw());
     $result = new FeedsParserResult();
     $result->title = $feed['title'];
+    $result->meetup_group_title = str_replace('Events - ', '', $feed['title']);
     $result->description = $feed['description'];
     $result->link = $feed['link'];
     if (is_array($feed['items'])) {
@@ -46,10 +47,13 @@ class MeetupParser extends FeedsParser {
         
         $item["timestamp"] = $timestamp_from_description;
 
+        // item title
+        $item["title"] = $item["title"] . ' (' . $result->meetup_group_title . ')';
+
         $result->items[] = $item;
       }
     }
-    
+    dsm($result);
     return $result;
   }
 
