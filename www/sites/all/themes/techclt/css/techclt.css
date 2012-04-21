@@ -1,0 +1,211 @@
+/*-=[ Layout ]=------------------------*/
+
+.left {
+  float:left;
+}
+.right {
+  float: right;
+}
+
+.text-right {
+  text-align: right;
+}
+
+body {
+  background: #fff url('../img/groovepaper.png') repeat;
+}
+
+header {
+  background: #fff url('../img/techCLT_header.png') repeat-x center top;
+}
+
+.main-header {
+  height: 166px;
+}
+.main-menu {
+  margin: 1.75em 0;
+}
+
+.guide {
+  padding: 3em 0;
+}
+.guide p {
+  margin: 0 0;
+}
+
+footer {
+  margin: 5em 0 2em 0;
+}
+
+.frank {
+  margin-top: 3em;
+}
+
+#front-content {
+  margin-top: 3em;
+}
+
+.breadcrumb {
+  margin-top: 1em;
+}
+
+/*-=[ Typography ]=------------------------*/
+
+.main-menu a,
+.guide,
+.title,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'vast shadow', serif;
+}
+
+.event-title,
+.event-location,
+.event-date,
+.content,
+body,
+a {
+  font-family: 'Lato', sans-serif;
+  color: #807d73;
+}
+
+.event-title,
+.event-location,
+.event-date,
+footer {
+  color: #897d73;
+}
+
+.guide-blue {
+  font-family: 'playball', sans-serif;
+  font-size: 1.5em;
+  color: #82aed2;
+  text-transform: capitalize;
+  text-shadow: 3px 3px 2px #111;
+}
+
+.main-menu a {
+  color: #807d73;
+  text-transform: lowercase;
+  font-size: 0.9em;
+}
+.main-menu ul li a {
+  text-decoration: none;
+  padding: 0 0.75em;
+}
+li.active a,
+.main-menu a:active,
+.main-menu a:hover {
+  color: #ff847f;
+}
+
+.guide {
+  margin: 0 0;
+  width: 100%;
+  background-color: #cac6b8;
+  background-image: -webkit-gradient(radial, 50% 50%,200,50% 50%,20, from(rgb(123, 121, 111)), to(rgb(202, 198, 184)));
+  background-image: -webkit-radial-gradient(50% 50%, rgb(202, 198, 184), rgb(123, 121, 111));
+  background-image: -moz-radial-gradient(50% 50%, rgb(202, 198, 184), rgb(123, 121, 111));
+  background-image: -o-radial-gradient(50% 50%, rgb(202, 198, 184), rgb(123, 121, 111));
+  background-image: -ms-radial-gradient(50% 50%, rgb(202, 198, 184), rgb(123, 121, 111));
+  background-image: radial-gradient(50% 50%, rgb(202, 198, 184), rgb(123, 121, 111));
+}
+.guide p {
+  font-size: 1.3em;
+  color: #fff;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.event-listing {
+  margin: 0 0 0 2em;
+}
+.event-listing ul {
+  list-style: none;
+  list-style-image: none;
+  margin: 0;
+  padding: 0;
+}
+.event-listing li {
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  border-bottom-color: #807d73;
+}
+
+.event-listing h2 {
+  margin: 0;
+  padding: 0.5em 0 0.5em 1em;
+  text-transform: uppercase;
+  color: #fff;
+  border-bottom-width: 1px;
+  border-bottom-color: #999;
+  border-bottom-style: solid;
+  background-color: #ff847f;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgb(252, 167, 164)), to(rgb(251, 130, 125)));
+  background-image: -webkit-linear-gradient(top, rgb(252, 167, 164), rgb(251, 130, 125));
+  background-image: -moz-linear-gradient(top, rgb(252, 167, 164), rgb(251, 130, 125));
+  background-image: -o-linear-gradient(top, rgb(252, 167, 164), rgb(251, 130, 125));
+  background-image: -ms-linear-gradient(top, rgb(252, 167, 164), rgb(251, 130, 125));
+  background-image: linear-gradient(top, rgb(252, 167, 164), rgb(251, 130, 125));
+  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#fca7a4', EndColorStr='#fb827d');
+}
+.event-title {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: 0.6em 0 0.2em 0;
+}
+.event-location {
+  font-size: 1.4em;
+}
+.event-date {
+  font-size: 1.2em;
+  color: #ff847f;
+  margin: 0 0 0.3em 0;
+}
+.see-all a {
+  text-decoration: none;
+  color: #82aed2;
+}
+
+footer a,
+footer a:visited {
+  text-decoration: none;
+  color: #ff847f;
+}
+
+/*-=[ SFX ]=--------------------------------*/
+
+.drop-shadow {
+  position: relative;
+  width: 90%;
+}
+
+.drop-shadow:before,
+.drop-shadow:after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  bottom: 15px;
+  left: 10px;
+  width: 50%;
+  height: 20%;
+  max-width: 300px;
+  -webkit-box-shadow: 0 15px 10px rgba(0, 0, 0, 0.7);
+  -moz-box-shadow: 0 15px 10px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 15px 10px rgba(0, 0, 0, 0.7);
+  -webkit-transform: rotate(-3deg);
+  -moz-transform: rotate(-3deg);
+  -o-transform: rotate(-3deg);
+  transform: rotate(-3deg);
+}
+.drop-shadow:after {
+  right: 10px;
+  left: auto;
+  -webkit-transform: rotate(3deg);
+  -moz-transform: rotate(3deg);
+  -o-transform: rotate(3deg);
+  transform: rotate(3deg);
+}
