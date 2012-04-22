@@ -26,10 +26,10 @@ header {
   margin: 1.75em 0;
 }
 
-.guide {
+.blurb {
   padding: 3em 0;
 }
-.guide p {
+.blurb p {
   margin: 0 0;
 }
 
@@ -52,7 +52,7 @@ footer {
 /*-=[ Typography ]=------------------------*/
 
 .main-menu a,
-.guide p,
+.blurb p,
 .title,
 h2,
 h3,
@@ -66,20 +66,14 @@ h6 {
 .event-location,
 .event-date,
 .content,
+footer,
 body,
 a {
   font-family: 'Lato', sans-serif;
   color: #807d73;
 }
 
-.event-title,
-.event-location,
-.event-date,
-footer {
-  color: #897d73;
-}
-
-.guide-blue {
+.blurb-blue {
   font-family: 'playball', sans-serif;
   font-size: 1.5em;
   color: #82aed2;
@@ -102,7 +96,7 @@ li.active a,
   color: #ff847f;
 }
 
-.guide {
+.blurb {
   margin: 0 0;
   width: 100%;
   background-color: #cac6b8;
@@ -113,7 +107,7 @@ li.active a,
   background-image: -ms-radial-gradient(50% 50%, rgb(202, 198, 184), rgb(123, 121, 111));
   background-image: radial-gradient(50% 50%, rgb(202, 198, 184), rgb(123, 121, 111));
 }
-.guide p {
+.blurb p {
   font-size: 1.3em;
   color: #fff;
   text-transform: uppercase;

@@ -86,7 +86,7 @@
     </header>
 
     <div role="main" id="front-content" class="container_16">
-      <div class="grid_7 guide drop-shadow">
+      <div class="grid_7 blurb drop-shadow">
         <?php print render($page['blurb']); ?>
       </div>
       <div class="grid_9 event-listing">
