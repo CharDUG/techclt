@@ -1,0 +1,68 @@
+.entityreference-view-widget .fieldset-wrapper {
+  border: 10px solid #edefeb;
+  padding: 0;
+}
+
+.entityreference-view-widget-left {
+  float: left;
+  width: 18%;
+  padding-left: 10px;
+  height: 380px;
+  overflow-y: auto;
+}
+
+/* The tabledrag table shouldn't have a border. */
+.entityreference-view-widget-left table {
+  border: 0;
+}
+
+.entityreference-view-widget-left .tabledrag-handle {
+  margin-top: 4px !important;
+}
+
+/*  Undo the table striping for draggable items in the sidebar.
+   "no_striping" is too bugy at the moment, with bugs such as #935066. */
+.entityreference-view-widget-left .even {
+  border: 0px;
+  background-color: white;
+}
+.entityreference-view-widget-left .odd {
+  border: 0px;
+  background-color: white;
+}
+
+.entityreference-view-widget-right {
+  float: right;
+  width: 80%;
+  border-left: 10px solid #edefeb;
+  height: 380px;
+}
+
+.entityreference-view-widget-right .view {
+  padding-left: 15px;
+  height: 297px;
+  overflow-y: auto;
+}
+
+.entityreference-view-widget-right-top {
+  border-bottom: 10px solid #edefeb;
+  padding-left: 15px;
+  min-height: 15px;
+}
+
+.entityreference-view-widget-right-top .views-exposed-form {
+  height: 83px;
+}
+
+/* Kill the border around the views results. */
+.entityreference-view-widget-right table {
+  border: 0;
+}
+
+.entityreference-view-widget .pager-submit {
+  display: none;
+}
+
+.entityreference-view-widget-right-top .ajax-progress {
+  float: right;
+}

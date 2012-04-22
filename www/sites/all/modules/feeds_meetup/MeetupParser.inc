@@ -15,6 +15,7 @@ class MeetupParser extends FeedsParser {
     $feed = common_syndication_parser_parse($fetcher_result->getRaw());
     $result = new FeedsParserResult();
     $result->title = $feed['title'];
+    $result->meetup_group_title = str_replace('Events - ', '', $feed['title']);
     $result->description = $feed['description'];
     $result->link = $feed['link'];
     if (is_array($feed['items'])) {
@@ -24,38 +25,35 @@ class MeetupParser extends FeedsParser {
             $item['geolocations'][$k] = new FeedsGeoTermElement($v);
           }
         }
-        $result->items[] = $item;
-      }
-    }
-	
-	// meetup date parsing on each item
-    if (is_array($feed['items'])) {
-      foreach ($feed['items'] as $item) {
+
+        // meetup date parsing on each item
+        // get date from description
+        $timestamp_from_description = $item['description'];
+      
+        $pattern = '/(January|February|March|April|May|June|July|August|September|October|November|December) \d{1,2} at \d{1,2}:\d{2} (AM|PM)/';
+        preg_match($pattern, $timestamp_from_description, $matches);
+        $timestamp_from_description = $matches[0];
+      
+        // convert to unix timestamp
+        $day_of_the_year = date("z");
+        $event_day_of_the_year = date("z", strtotime(ereg_replace("at", date("Y"), $timestamp_from_description)));
         
-		// get date from description
-		$timestamp_from_description = $item['description'];
-	
-		$pattern = '/(January|February|March|April|May|June|July|August|September|October|November|December) \d{1,2} at \d{1,2}:\d{2} (AM|PM)/';
-		preg_match($pattern, $timestamp_from_description, $matches);
-		$timestamp_from_description = $matches[0];
-	
-		// convert to unix timestamp
-		$day_of_the_year = date("z");
-		$event_day_of_the_year = date("z", strtotime(ereg_replace("at", date("Y"), $timestamp_from_description)));
-		
-		$event_year = date("Y");
-		if ($event_day_of_the_year < $day_of_the_year) {
-			$event_year = date("Y") + 1;
-		}
-		
-		$timestamp_from_description = strtotime(ereg_replace("at", $event_year, $timestamp_from_description));
-		
-		$item["timestamp"] = $timestamp_from_description;
-		
+        $event_year = date("Y");
+        if ($event_day_of_the_year < $day_of_the_year) {
+          $event_year = date("Y") + 1;
+        }
+        
+        $timestamp_from_description = strtotime(ereg_replace("at", $event_year, $timestamp_from_description));
+        
+        $item["timestamp"] = $timestamp_from_description;
+
+        // item title
+        $item["title"] = $item["title"] . ' (' . $result->meetup_group_title . ')';
+
         $result->items[] = $item;
       }
     }
-	
+    
     return $result;
   }
 
