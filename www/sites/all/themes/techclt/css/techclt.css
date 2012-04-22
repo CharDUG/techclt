@@ -117,18 +117,6 @@ li.active a,
 .event-listing {
   margin: 0 0 0 2em;
 }
-.event-listing ul {
-  list-style: none;
-  list-style-image: none;
-  margin: 0;
-  padding: 0;
-}
-.event-listing li {
-  border-bottom-width: 2px;
-  border-bottom-style: solid;
-  border-bottom-color: #807d73;
-}
-
 .event-listing h2 {
   margin: 0;
   padding: 0.5em 0 0.5em 1em;
@@ -146,6 +134,24 @@ li.active a,
   background-image: linear-gradient(top, rgb(252, 167, 164), rgb(251, 130, 125));
   filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#fca7a4', EndColorStr='#fb827d');
 }
+.event-listing ul {
+  list-style: none;
+  list-style-image: none;
+  margin: 0;
+  padding: 0;
+}
+.event-listing li {
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  border-bottom-color: #807d73;
+}
+.event-listing a,
+.event-listing a:hover,
+.event-listing a:visited {
+  text-decoration: none;
+  color: #807d73;
+}
+.event-listing .views-field-title,
 .event-title {
   font-size: 1.5em;
   font-weight: bold;
@@ -154,10 +160,12 @@ li.active a,
 .event-location {
   font-size: 1.4em;
 }
+.event-listing .views-field-field-event-date-time,
 .event-date {
   font-size: 1.2em;
   color: #ff847f;
   margin: 0 0 0.3em 0;
+  text-align: right;
 }
 .see-all a {
   text-decoration: none;
