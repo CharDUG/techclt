@@ -87,32 +87,10 @@
 
     <div role="main" id="front-content" class="container_16">
       <div class="grid_7 guide drop-shadow">
-        <p>A handy dandy</p>
-        <p>little guide to the</p>
-        <p><span class="guide-blue">tech community events</span></p>
-        <p>in Charlotte,</p>
-        <p>North Carolina.</p>
+        <?php print render($page['blurb']); ?>
       </div>
       <div class="grid_9 event-listing">
-        <h2>Upcoming Events</h2>
-        <ul>
-          <li>
-            <div class="event-title">How to be ugly and still have friends…</div>
-            <div class="event-location">Classic - 8335 Classic Drive</div>
-            <div class="event-date text-right">Thursday, January 20 at 7:00 pm</div>
-          </li>
-          <li>
-            <div class="event-title">There might be a monster under my bed?</div>
-            <div class="event-location">UNCC - 911 Emergency Lane</div>
-            <div class="event-date text-right">Friday, January 21 at 11:00 pm</div>
-          </li>
-          <li>
-            <div class="event-title">How to eat your weight in food in one sitting!</div>
-            <div class="event-location">Taco Mac - 111 Address Drive</div>
-            <div class="event-date text-right">Saturday, January 22 at 1:17 am</div>
-          </li>
-        </ul>
-        <p class="text-right see-all"><a href="#">See All Events</a></p>
+        <?php print render($page['event_list']); ?>
       </div>
     </div>
 
