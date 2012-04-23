@@ -26,10 +26,10 @@ header {
   margin: 1.75em 0;
 }
 
-.guide {
+.blurb {
   padding: 3em 0;
 }
-.guide p {
+.blurb p {
   margin: 0 0;
 }
 
@@ -52,7 +52,7 @@ footer {
 /*-=[ Typography ]=------------------------*/
 
 .main-menu a,
-.guide,
+.blurb p,
 .title,
 h2,
 h3,
@@ -66,20 +66,14 @@ h6 {
 .event-location,
 .event-date,
 .content,
+footer,
 body,
 a {
   font-family: 'Lato', sans-serif;
   color: #807d73;
 }
 
-.event-title,
-.event-location,
-.event-date,
-footer {
-  color: #897d73;
-}
-
-.guide-blue {
+.blurb-blue {
   font-family: 'playball', sans-serif;
   font-size: 1.5em;
   color: #82aed2;
@@ -102,7 +96,7 @@ li.active a,
   color: #ff847f;
 }
 
-.guide {
+.blurb {
   margin: 0 0;
   width: 100%;
   background-color: #cac6b8;
@@ -113,7 +107,7 @@ li.active a,
   background-image: -ms-radial-gradient(50% 50%, rgb(202, 198, 184), rgb(123, 121, 111));
   background-image: radial-gradient(50% 50%, rgb(202, 198, 184), rgb(123, 121, 111));
 }
-.guide p {
+.blurb p {
   font-size: 1.3em;
   color: #fff;
   text-transform: uppercase;
@@ -123,18 +117,6 @@ li.active a,
 .event-listing {
   margin: 0 0 0 2em;
 }
-.event-listing ul {
-  list-style: none;
-  list-style-image: none;
-  margin: 0;
-  padding: 0;
-}
-.event-listing li {
-  border-bottom-width: 2px;
-  border-bottom-style: solid;
-  border-bottom-color: #807d73;
-}
-
 .event-listing h2 {
   margin: 0;
   padding: 0.5em 0 0.5em 1em;
@@ -152,6 +134,25 @@ li.active a,
   background-image: linear-gradient(top, rgb(252, 167, 164), rgb(251, 130, 125));
   filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#fca7a4', EndColorStr='#fb827d');
 }
+.event-listing ul {
+  list-style: none;
+  list-style-image: none;
+  margin: 0;
+  padding: 0;
+}
+.event-listing li {
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  border-bottom-color: #807d73;
+  margin: 1em 0 1.5em 0 !important;
+}
+.event-listing a,
+.event-listing a:hover,
+.event-listing a:visited {
+  text-decoration: none;
+  color: #807d73;
+}
+.event-listing .views-field-title,
 .event-title {
   font-size: 1.5em;
   font-weight: bold;
@@ -160,10 +161,12 @@ li.active a,
 .event-location {
   font-size: 1.4em;
 }
+.event-listing .views-field-field-event-date-time,
 .event-date {
   font-size: 1.2em;
   color: #ff847f;
   margin: 0 0 0.3em 0;
+  text-align: right;
 }
 .see-all a {
   text-decoration: none;

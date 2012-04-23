@@ -26,6 +26,8 @@
   regions[sidebar_first] = Left sidebar
   regions[sidebar_second] = Right sidebar
   regions[footer] = Footer
+  regions[blurb] = Front page blurb
+  regions[event_list] = Front page event list
 
 ;-=[ Features ]=--------------------------
 
