@@ -1,0 +1,69 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+function complete_profile_menu() {
+  $items['user/%user/complete-profile'] = array(
+    'title' => 'Complete your profile',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('complete_profile_form', 1),
+    'access callback' => 'complete_profile_form_access',
+    'access arguments' => array(1),
+    'type' => MENU_CALLBACK,
+    'file' => 'complete_profile.pages.inc',
+  );
+
+  return $items;
+}
+
+function entity_has_empty_required_fields($entity_type, $entity) {
+  list(, , $bundle) = entity_extract_ids($entity_type, $entity);
+  $instances = field_info_instances($entity_type, $bundle);
+
+  foreach ($instances as $instance) {
+    if (!empty($instance['required']) && !field_get_items($entity_type, $entity, $instance['field_name'])) {
+      return TRUE;
+    }
+  }
+
+  return FALSE;
+}
+
+function complete_profile_init() {
+  if (complete_profile_should_redirect()) {
+    $destination = isset($_GET['destination']) ? $_GET['destination'] : current_path();
+    unset($_GET['destination']);
+    drupal_goto('user/' . $GLOBALS['user']->uid . '/complete-profile', array('query' => array('destination' => $destination)));
+  }
+}
+
+function complete_profile_should_redirect() {
+  $account = user_load($GLOBALS['user']->uid);
+  if (!complete_profile_form_access($account)) {
+    return FALSE;
+  }
+
+  // Certain paths cannot be redirected to the complete profile form.
+  $exclude_paths = variable_get('complete_profile_exclude_paths', implode("\n", array('user/*/complete-profile', 'user/logout', 'admin/*')));
+  if (drupal_match_path(current_path(), $exclude_paths)) {
+    return FALSE;
+  }
+
+  return TRUE;
+}
+
+function complete_profile_form_access($account) {
+  if (empty($account->uid)) {
+    return FALSE;
+  }
+  elseif (!entity_has_empty_required_fields('user', $account)) {
+    return FALSE;
+  }
+  elseif (user_access('administer users')) {
+    return TRUE;
+  }
+  else {
+    return $GLOBALS['user']->uid == $account->uid;
+  }
+}
