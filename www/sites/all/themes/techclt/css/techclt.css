@@ -55,6 +55,7 @@ footer {
 .blurb p,
 .title,
 .field-name-field-profile-name,
+.field-name-field-group-tags .field-label,
 .field-name-field-profile-technologies .field-label,
 .field-name-field-group-meeting-information .field-label,
 .field-name-field-group-technologies .field-label,
@@ -245,6 +246,7 @@ footer a:visited {
   padding: 0.1em 0.5em 0.3em 2em;
 }
 
+.field-name-field-group-tags .field-label,
 .field-name-field-profile-technologies .field-label,
 .field-name-field-group-meeting-information .field-label,
 .field-name-field-group-technologies .field-label,
@@ -255,11 +257,15 @@ footer a:visited {
   -webkit-margin-end: 0px;
 }
 
-.field-name-field-profile-technologies .field-items div {
+.field-name-field-profile-technologies .field-items div,
+.field-name-field-group-tags .field-items div,
+.field-name-field-group-technologies .field-items div {
   display: inline;
   padding: 0 0.5em 0 0;
 }
 
-.field-name-field-profile-technologies .field-items a {
+.field-name-field-profile-technologies .field-items a,
+.field-name-field-group-tags .field-items a,
+.field-name-field-group-technologies .field-items a {
   color: #FF847F;
 }
