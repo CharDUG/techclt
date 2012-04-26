@@ -56,6 +56,8 @@ footer {
 .title,
 .field-name-field-profile-name,
 .field-name-field-profile-technologies .field-label,
+.field-name-field-group-meeting-information .field-label,
+.field-name-field-group-technologies .field-label,
 h2,
 h3,
 h4,
@@ -233,7 +235,8 @@ footer a:visited {
   font-style: italic;
 }
 
-.field-name-field-profile-links a {
+.field-name-field-profile-links a,
+.field-name-field-group-website a {
   text-decoration: none;
   font: bold 1em/2em 'Lato', sans-serif;
   color: #fff;
@@ -242,7 +245,10 @@ footer a:visited {
   padding: 0.1em 0.5em 0.3em 2em;
 }
 
-.field-name-field-profile-technologies .field-label{
+.field-name-field-profile-technologies .field-label,
+.field-name-field-group-meeting-information .field-label,
+.field-name-field-group-technologies .field-label,
+.field-name-field-group-logo .field-item {
   -webkit-margin-before: 1em;
   -webkit-margin-after: 0em;
   -webkit-margin-start: 0px;
