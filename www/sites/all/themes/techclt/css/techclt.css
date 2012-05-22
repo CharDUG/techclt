@@ -54,6 +54,10 @@ footer {
 .main-menu a,
 .blurb p,
 .title,
+.field-name-field-profile-name,
+.page-user .field-label,
+.node-group .field-label,
+.node-company .field-label,
 h2,
 h3,
 h4,
@@ -212,4 +216,82 @@ footer a:visited {
   -moz-transform: rotate(3deg);
   -o-transform: rotate(3deg);
   transform: rotate(3deg);
+}
+
+.page-user h1#page-title.title {
+  display: none;
+}
+
+.field-name-field-profile-name {
+  display: block;
+  font-size: 2em;
+  -webkit-margin-before: 0.67em;
+  -webkit-margin-after: 0.67em;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+  font-weight: bold;
+  }
+
+.field-name-field-profile-bio {
+  font-style: italic;
+}
+
+.field-name-field-profile-links a,
+.field-name-field-group-website a,
+.field-name-field-company-website a {
+  text-decoration: none;
+  font: bold 1em/2em 'Lato', sans-serif;
+  color: #fff;
+  background: #82aed2 url('../img/arrow1_e.png') no-repeat 3px;
+  margin: 0.5em 0;
+  padding: 0.1em 0.5em 0.3em 2em;
+}
+
+.page-user .field-label,
+.node-group .field-label,
+.node-company .field-label,
+.field-name-field-group-logo .field-item,
+.field-name-field-company-logo .field-item {
+  -webkit-margin-before: 1em;
+  -webkit-margin-after: 0em;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+}
+
+.field-name-field-profile-technologies .field-items div,
+.field-name-field-group-tags .field-items div,
+.field-name-field-group-technologies .field-items div,
+.field-name-field-company-tags .field-items div,
+.field-name-field-company-technologies .field-items div {
+  display: inline;
+  padding: 0 0.5em 0 0;
+}
+
+.field-name-field-profile-technologies .field-items a,
+.field-name-field-group-tags .field-items a,
+.field-name-field-group-technologies .field-items a,
+.view-groups .views-field-title a,
+.view-companies .views-field-title a {
+  color: #FF847F;
+}
+
+.view-groups .views-field-title a,
+.view-companies .views-field-title a {
+  font-weight: bold;
+  font-size: 1.5em;
+  line-height: 1.7em;
+  text-decoration: none;
+}
+
+.view-groups .views-row,
+.view-companies .views-row {
+  border-bottom: 3px solid #807d73;
+}
+
+.views-row .views-field {
+  -webkit-margin-before: 1em;
+  -webkit-margin-after: 0em;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+
 }
