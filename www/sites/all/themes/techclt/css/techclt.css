@@ -292,5 +292,9 @@ footer a:visited {
   -webkit-margin-after: 0em;
   -webkit-margin-start: 0px;
   -webkit-margin-end: 0px;
+}
 
+.view-events span.views-field-title {
+  display: block;
+  padding: 0 0 0 1em;
 }
