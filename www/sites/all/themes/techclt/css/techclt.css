@@ -89,7 +89,7 @@ a {
 .main-menu a {
   color: #807d73;
   text-transform: lowercase;
-  font-size: 0.9em;
+  font-size: 1em;
 }
 .main-menu ul li a {
   text-decoration: none;
@@ -229,7 +229,6 @@ footer a:visited {
   -webkit-margin-after: 0.67em;
   -webkit-margin-start: 0px;
   -webkit-margin-end: 0px;
-  font-weight: bold;
   }
 
 .field-name-field-profile-bio {
