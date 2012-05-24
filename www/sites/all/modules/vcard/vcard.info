@@ -1,0 +1,14 @@
+; $Id: vcard.info,v 1.4 2009/10/24 05:38:41 sanduhrs Exp $
+name = vCard
+description = "Allows vcard export of user data"
+dependencies[] = profile
+core = 7.x
+files[] = vcard.module
+files[] = vcard.admin.inc
+
+; Information added by drupal.org packaging script on January 1, 1970 - 00:00
+version = "7.x-1.5"
+core = "7.x"
+project = "vcard"
+datestamp = "1295428903"
+
