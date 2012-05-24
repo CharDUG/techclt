@@ -1,0 +1,10 @@
+name = Multi-admin pending approval notifications (MAPAN)
+description = Notify all users that have the administer users permission when a new user registers with pending approval
+core = 7.x
+
+; Information added by drupal.org packaging script on 2012-05-14
+version = "7.x-1.0"
+core = "7.x"
+project = "mapan"
+datestamp = "1337011859"
+
