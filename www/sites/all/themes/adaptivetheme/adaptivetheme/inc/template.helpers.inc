@@ -18,8 +18,9 @@ function load_subtheme_media_queries($files, $theme_name) {
     drupal_add_css($filepath, array(
       'preprocess' => variable_get('preprocess_css', '') == 1 ? TRUE : FALSE,
       'group' => CSS_THEME,
-      'media' => 'screen',
+      'media' => 'all',
       'every_page' => TRUE,
+      'weight' => 99,
       )
     );
   }
@@ -73,34 +74,38 @@ function get_color_scheme_name($theme_name) {
 
 /**
  * Add classes for platforms and browsers.
+ * This is very simple and can never replace something like WURFL or Mobile Smart, in the future
+ * I intend to build a module to replace this. Warning, this is not overly tested...
  */
 function css_browser_selector($ua = NULL) {
+  if ($ua == NULL && !isset($_SERVER['HTTP_USER_AGENT'])) {
+    return;
+  }
   $ua = ($ua) ? strtolower($ua) : strtolower($_SERVER['HTTP_USER_AGENT']);
+
   $g = 'gecko';
   $w = 'webkit';
   $s = 'safari';
+  $o = 'opera';
+
   $b = array();
-  // browsers
   if(!preg_match('/opera|webtv/i', $ua) && preg_match('/msie\s(\d)/', $ua, $array)) {
     $b[] = 'ie ie' . $array[1];
   }
-  elseif (strstr($ua, 'firefox/3.6')) {
-    $b[] = $g . ' ff3 ff3_5';
+  elseif (strstr($ua, 'firefox')) {
+    $b[] = $g . ' firefox';
   }
   elseif (strstr($ua, 'gecko/')) {
     $b[] = $g;
   }
   elseif (preg_match('/opera(\s|\/)(\d+)/', $ua, $array)) {
-    $b[] = 'opera opera' . $array[2];
+    $b[] = $o;
   }
   elseif (strstr($ua, 'konqueror')) {
     $b[] = 'konqueror';
   }
   elseif (strstr($ua, 'chrome')) {
-    $b[] = $w . ' ' . $s . ' chrome';
-  }
-  elseif (strstr($ua, 'iron')) {
-    $b[] = $w . ' ' . $s . ' iron';
+    $b[] = $w . ' chrome';
   }
   elseif (strstr($ua, 'applewebkit/')) {
     $b[] = (preg_match('/version\/(\d+)/i', $ua, $array)) ? $w . ' ' . $s . ' ' . $s . $array[1] : $w . ' ' . $s;
@@ -108,7 +113,6 @@ function css_browser_selector($ua = NULL) {
   elseif (strstr($ua, 'mozilla/')) {
     $b[] = $g;
   }
-  // platform
   if (strstr($ua, 'j2me')) {
     $b[] = 'mobile';
   }
@@ -117,6 +121,45 @@ function css_browser_selector($ua = NULL) {
   }
   elseif (strstr($ua, 'ipod')) {
     $b[] = 'ipod';
+  }
+  elseif (strstr($ua, 'ipad')) {
+    $b[] = 'ipad';
+  }
+  elseif (strstr($ua, 'android')) {
+    $b[] = 'android';
+  }
+  elseif (strstr($ua, 'googletv')) {
+    $b[] = 'googletv';
+  }
+  elseif (strstr($ua, 'xoom')) {
+    $b[] = 'xoom';
+  }
+  elseif (strstr($ua, 'nuvifone')) {
+    $b[] = 'nuvifone';
+  }
+  elseif (strstr($ua, 'symbian')) {
+    $b[] = 'symbian';
+  }
+  elseif (strstr($ua, 'blackberry')) {
+    $b[] = 'blackberry';
+  }
+  elseif (strstr($ua, 'windows phone os 7')) {
+    $b[] = 'windows-phone-7';
+  }
+  elseif (strstr($ua, 'windows ce')) {
+    $b[] = 'windows-ce';
+  }
+  elseif (strstr($ua, 'iemobile')) {
+    $b[] = 'iemobile';
+  }
+  elseif (strstr($ua, 'palm')) {
+    $b[] = 'palm';
+  }
+  elseif (strstr($ua, 'webos')) {
+    $b[] = 'webos';
+  }
+  elseif (strstr($ua, 'kindle')) {
+    $b[] = 'kindle';
   }
   elseif (strstr($ua, 'mac')) {
     $b[] = 'mac';

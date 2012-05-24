@@ -30,6 +30,7 @@
   <div class="content-columns"><div class="container clearfix">  
     <div id="columns"><div class="columns-inner clearfix">
       <div id="content-column"><div class="content-inner">
+        <?php print render($page['highlighted']); ?>
         <?php print $messages; ?>
         <?php print render($page['help']); ?>
         <?php if ($action_links): ?>

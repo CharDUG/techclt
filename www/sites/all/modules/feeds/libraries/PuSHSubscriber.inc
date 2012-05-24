@@ -219,12 +219,12 @@ class PuSHSubscriber {
       if ($verify) {
         header('HTTP/1.1 200 "Found"', NULL, 200);
         print $_GET['hub_challenge'];
-        drupal_exit();
+        exit();
       }
     }
     header('HTTP/1.1 404 "Not Found"', NULL, 404);
     $this->log('Could not verify subscription.', 'error');
-    drupal_exit();
+    exit();
   }
 
   /**

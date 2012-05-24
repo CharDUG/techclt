@@ -14,9 +14,6 @@
   stylesheets[all][] = css/at.layout.css
   stylesheets[all][] = css/at.messages.css
 
-;----------// Stylesheets
-  scripts[] = js/respond.js
-
 ;----------// Regions
   regions[sidebar_first]     = Sidebar first
   regions[sidebar_second]    = Sidebar second
@@ -32,6 +29,9 @@
   regions[help]              = Help
   regions[page_top]          = Page top
   regions[page_bottom]       = Page bottom
+
+;----------// Panels layouts
+  plugins[panels][layouts] = panels
 
 ;----------// Theme Settings
 
@@ -125,9 +125,9 @@
   ; Extra markup
   settings[menu_item_span_elements] = 0
 
-; Information added by drupal.org packaging script on 2011-10-05
-version = "7.x-2.1"
+; Information added by drupal.org packaging script on 2012-02-16
+version = "7.x-2.2"
 core = "7.x"
 project = "adaptivetheme"
-datestamp = "1317817600"
+datestamp = "1329397237"
 

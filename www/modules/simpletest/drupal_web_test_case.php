@@ -74,6 +74,18 @@ abstract class DrupalTestCase {
   protected $skipClasses = array(__CLASS__ => TRUE);
 
   /**
+   * Flag to indicate whether the test has been set up.
+   *
+   * The setUp() method isolates the test from the parent Drupal site by
+   * creating a random prefix for the database and setting up a clean file
+   * storage directory. The tearDown() method then cleans up this test
+   * environment. We must ensure that setUp() has been run. Otherwise,
+   * tearDown() will act on the parent Drupal site rather than the test
+   * environment, destroying live data.
+   */
+  protected $setup = FALSE;
+
+  /**
    * Constructor for DrupalTestCase.
    *
    * @param $test_id
@@ -127,7 +139,15 @@ abstract class DrupalTestCase {
     );
 
     // Store assertion for display after the test has completed.
-    Database::getConnection('default', 'simpletest_original_default')
+    try {
+      $connection = Database::getConnection('default', 'simpletest_original_default');
+    }
+    catch (DatabaseConnectionNotDefinedException $e) {
+      // If the test was not set up, the simpletest_original_default
+      // connection does not exist.
+      $connection = Database::getConnection('default', 'default');
+    }
+    $connection
       ->insert('simpletest')
       ->fields($assertion)
       ->execute();
@@ -474,14 +494,19 @@ abstract class DrupalTestCase {
         );
         $completion_check_id = DrupalTestCase::insertAssert($this->testId, $class, FALSE, t('The test did not complete due to a fatal error.'), 'Completion check', $caller);
         $this->setUp();
-        try {
-          $this->$method();
-          // Finish up.
+        if ($this->setup) {
+          try {
+            $this->$method();
+            // Finish up.
+          }
+          catch (Exception $e) {
+            $this->exceptionHandler($e);
+          }
+          $this->tearDown();
         }
-        catch (Exception $e) {
-          $this->exceptionHandler($e);
+        else {
+          $this->fail(t("The test cannot be executed because it has not been set up properly."));
         }
-        $this->tearDown();
         // Remove the completion check record.
         DrupalTestCase::deleteAssert($completion_check_id);
       }
@@ -691,6 +716,7 @@ class DrupalUnitTestCase extends DrupalTestCase {
       unset($module_list['locale']);
       module_list(TRUE, FALSE, FALSE, $module_list);
     }
+    $this->setup = TRUE;
   }
 
   protected function tearDown() {
@@ -1045,28 +1071,35 @@ class DrupalWebTestCase extends DrupalTestCase {
   }
 
   /**
-   * Create a user with a given set of permissions. The permissions correspond to the
-   * names given on the privileges page.
+   * Create a user with a given set of permissions.
    *
-   * @param $permissions
-   *   Array of permission names to assign to user.
-   * @return
+   * @param array $permissions
+   *   Array of permission names to assign to user. Note that the user always
+   *   has the default permissions derived from the "authenticated users" role.
+   *
+   * @return object|false
    *   A fully loaded user object with pass_raw property, or FALSE if account
    *   creation fails.
    */
-  protected function drupalCreateUser($permissions = array('access comments', 'access content', 'post comments', 'skip comment approval')) {
-    // Create a role with the given permission set.
-    if (!($rid = $this->drupalCreateRole($permissions))) {
-      return FALSE;
+  protected function drupalCreateUser(array $permissions = array()) {
+    // Create a role with the given permission set, if any.
+    $rid = FALSE;
+    if ($permissions) {
+      $rid = $this->drupalCreateRole($permissions);
+      if (!$rid) {
+        return FALSE;
+      }
     }
 
     // Create a user assigned to that role.
     $edit = array();
     $edit['name']   = $this->randomName();
     $edit['mail']   = $edit['name'] . '@example.com';
-    $edit['roles']  = array($rid => $rid);
     $edit['pass']   = user_password();
     $edit['status'] = 1;
+    if ($rid) {
+      $edit['roles'] = array($rid => $rid);
+    }
 
     $account = user_save(drupal_anonymous_user(), $edit);
 
@@ -1238,6 +1271,10 @@ class DrupalWebTestCase extends DrupalTestCase {
       ->condition('test_id', $this->testId)
       ->execute();
 
+    // Reset all statics and variables to perform tests in a clean environment.
+    $conf = array();
+    drupal_static_reset();
+
     // Clone the current connection and replace the current prefix.
     $connection_info = Database::getConnectionInfo('default');
     Database::renameConnection('default', 'simpletest_original_default');
@@ -1285,14 +1322,17 @@ class DrupalWebTestCase extends DrupalTestCase {
     ini_set('log_errors', 1);
     ini_set('error_log', $public_files_directory . '/error.log');
 
-    // Reset all statics and variables to perform tests in a clean environment.
-    $conf = array();
-    drupal_static_reset();
-
     // Set the test information for use in other parts of Drupal.
     $test_info = &$GLOBALS['drupal_test_info'];
     $test_info['test_run_id'] = $this->databasePrefix;
     $test_info['in_child_site'] = FALSE;
+
+    // Preset the 'install_profile' system variable, so the first call into
+    // system_rebuild_module_data() (in drupal_install_system()) will register
+    // the test's profile as a module. Without this, the installation profile of
+    // the parent site (executing the test) is registered, and the test
+    // profile's hook_install() and other hook implementations are never invoked.
+    $conf['install_profile'] = $this->profile;
 
     include_once DRUPAL_ROOT . '/includes/install.inc';
     drupal_install_system();
@@ -1303,6 +1343,12 @@ class DrupalWebTestCase extends DrupalTestCase {
     variable_set('file_public_path', $public_files_directory);
     variable_set('file_private_path', $private_files_directory);
     variable_set('file_temporary_path', $temp_files_directory);
+
+    // Set the 'simpletest_parent_profile' variable to add the parent profile's
+    // search path to the child site's search paths.
+    // @see drupal_system_listing()
+    // @todo This may need to be primed like 'install_profile' above.
+    variable_set('simpletest_parent_profile', $this->originalProfile);
 
     // Include the testing profile.
     variable_set('install_profile', $this->profile);
@@ -1357,6 +1403,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     variable_set('mail_system', array('default-system' => 'TestingMailSystem'));
 
     drupal_set_time_limit($this->timeLimit);
+    $this->setup = TRUE;
   }
 
   /**
@@ -1631,7 +1678,16 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   An header.
    */
   protected function curlHeaderCallback($curlHandler, $header) {
-    $this->headers[] = $header;
+    // Header fields can be extended over multiple lines by preceding each
+    // extra line with at least one SP or HT. They should be joined on receive.
+    // Details are in RFC2616 section 4.
+    if ($header[0] == ' ' || $header[0] == "\t") {
+      // Normalize whitespace between chucks.
+      $this->headers[] = array_pop($this->headers) . ' ' . trim($header);
+    }
+    else {
+      $this->headers[] = $header;
+    }
 
     // Errors are being sent via X-Drupal-Assertion-* headers,
     // generated by _drupal_log_error() in the exact form required
@@ -1999,6 +2055,8 @@ class DrupalWebTestCase extends DrupalTestCase {
       // them.
       $dom = new DOMDocument();
       @$dom->loadHTML($content);
+      // XPath allows for finding wrapper nodes better than DOM does.
+      $xpath = new DOMXPath($dom);
       foreach ($return as $command) {
         switch ($command['command']) {
           case 'settings':
@@ -2006,52 +2064,52 @@ class DrupalWebTestCase extends DrupalTestCase {
             break;
 
           case 'insert':
-            // @todo ajax.js can process commands that include a 'selector', but
-            //   these are hard to emulate with DOMDocument. For now, we only
-            //   implement 'insert' commands that use $ajax_settings['wrapper'].
+            $wrapperNode = NULL;
+            // When a command doesn't specify a selector, use the
+            // #ajax['wrapper'] which is always an HTML ID.
             if (!isset($command['selector'])) {
-              // $dom->getElementById() doesn't work when drupalPostAJAX() is
-              // invoked multiple times for a page, so use XPath instead. This
-              // also sets us up for adding support for $command['selector'] in
-              // the future, once we figure out how to transform a jQuery
-              // selector to XPath.
-              $xpath = new DOMXPath($dom);
               $wrapperNode = $xpath->query('//*[@id="' . $ajax_settings['wrapper'] . '"]')->item(0);
-              if ($wrapperNode) {
-                // ajax.js adds an enclosing DIV to work around a Safari bug.
-                $newDom = new DOMDocument();
-                $newDom->loadHTML('<div>' . $command['data'] . '</div>');
-                $newNode = $dom->importNode($newDom->documentElement->firstChild->firstChild, TRUE);
-                $method = isset($command['method']) ? $command['method'] : $ajax_settings['method'];
-                // The "method" is a jQuery DOM manipulation function. Emulate
-                // each one using PHP's DOMNode API.
-                switch ($method) {
-                  case 'replaceWith':
-                    $wrapperNode->parentNode->replaceChild($newNode, $wrapperNode);
-                    break;
-                  case 'append':
-                    $wrapperNode->appendChild($newNode);
-                    break;
-                  case 'prepend':
-                    // If no firstChild, insertBefore() falls back to
-                    // appendChild().
-                    $wrapperNode->insertBefore($newNode, $wrapperNode->firstChild);
-                    break;
-                  case 'before':
-                    $wrapperNode->parentNode->insertBefore($newNode, $wrapperNode);
-                    break;
-                  case 'after':
-                    // If no nextSibling, insertBefore() falls back to
-                    // appendChild().
-                    $wrapperNode->parentNode->insertBefore($newNode, $wrapperNode->nextSibling);
-                    break;
-                  case 'html':
-                    foreach ($wrapperNode->childNodes as $childNode) {
-                      $wrapperNode->removeChild($childNode);
-                    }
-                    $wrapperNode->appendChild($newNode);
-                    break;
-                }
+            }
+            // @todo Ajax commands can target any jQuery selector, but these are
+            //   hard to fully emulate with XPath. For now, just handle 'head'
+            //   and 'body', since these are used by ajax_render().
+            elseif (in_array($command['selector'], array('head', 'body'))) {
+              $wrapperNode = $xpath->query('//' . $command['selector'])->item(0);
+            }
+            if ($wrapperNode) {
+              // ajax.js adds an enclosing DIV to work around a Safari bug.
+              $newDom = new DOMDocument();
+              $newDom->loadHTML('<div>' . $command['data'] . '</div>');
+              $newNode = $dom->importNode($newDom->documentElement->firstChild->firstChild, TRUE);
+              $method = isset($command['method']) ? $command['method'] : $ajax_settings['method'];
+              // The "method" is a jQuery DOM manipulation function. Emulate
+              // each one using PHP's DOMNode API.
+              switch ($method) {
+                case 'replaceWith':
+                  $wrapperNode->parentNode->replaceChild($newNode, $wrapperNode);
+                  break;
+                case 'append':
+                  $wrapperNode->appendChild($newNode);
+                  break;
+                case 'prepend':
+                  // If no firstChild, insertBefore() falls back to
+                  // appendChild().
+                  $wrapperNode->insertBefore($newNode, $wrapperNode->firstChild);
+                  break;
+                case 'before':
+                  $wrapperNode->parentNode->insertBefore($newNode, $wrapperNode);
+                  break;
+                case 'after':
+                  // If no nextSibling, insertBefore() falls back to
+                  // appendChild().
+                  $wrapperNode->parentNode->insertBefore($newNode, $wrapperNode->nextSibling);
+                  break;
+                case 'html':
+                  foreach ($wrapperNode->childNodes as $childNode) {
+                    $wrapperNode->removeChild($childNode);
+                  }
+                  $wrapperNode->appendChild($newNode);
+                  break;
               }
             }
             break;
@@ -3069,8 +3127,21 @@ class DrupalWebTestCase extends DrupalTestCase {
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertFieldByName($name, $value = '', $message = '') {
-    return $this->assertFieldByXPath($this->constructFieldXpath('name', $name), $value, $message ? $message : t('Found field by name @name', array('@name' => $name)), t('Browser'));
+  protected function assertFieldByName($name, $value = NULL, $message = NULL) {
+    if (!isset($message)) {
+      if (!isset($value)) {
+        $message = t('Found field with name @name', array(
+          '@name' => var_export($name, TRUE),
+        ));
+      }
+      else {
+        $message = t('Found field with name @name and value @value', array(
+          '@name' => var_export($name, TRUE),
+          '@value' => var_export($value, TRUE),
+        ));
+      }
+    }
+    return $this->assertFieldByXPath($this->constructFieldXpath('name', $name), $value, $message, t('Browser'));
   }
 
   /**
