@@ -1,0 +1,76 @@
+<?php
+
+/**
+ * @file
+ * MAPAN module and its hooks implementations.
+ */
+
+/**
+ * Implements hook_mail_alter().
+ *
+ * Also send pending approval mails to users who have
+ * the 'administer users' permission.
+ *
+ * @see _user_mail_notify()
+ */
+function mapan_mail_alter(&$message) {
+  if ($message['id'] == 'user_register_pending_approval_admin') {
+    if (!isset($message['params']['stop_propagation'])) {
+      $message['params']['stop_propagation'] = TRUE;
+      $roles = user_roles(TRUE, 'administer users');
+      $uids = db_select('users_roles', 'ur')
+        ->fields('ur', array('uid'))
+        ->condition('rid', array_keys($roles))
+        ->execute()
+        ->fetchCol();
+      $users = user_load_multiple($uids);
+      foreach ($users as $account) {
+        // Notify users by default.
+        if (!isset($account->data['notify_pending_approval']) || $account->data['notify_pending_approval']) {
+          $message['params']['admin_account'] = $account;
+          drupal_mail('user', 'register_pending_approval_admin', $account->mail, user_preferred_language($account), $message['params']);
+        }
+      }
+    }
+    else {
+      $args = array('!account_link' => url("user/{$message['params']['admin_account']->uid}/edit", array('absolute' => TRUE)));
+      $options = array('langcode' => $message['language']->language);
+      $message['body'][] = t('You can disable these notifications in your user account at !account_link', $args, $options);
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Add the disable notifications of pending approval users
+ * to an individual user's account page.
+ *
+ * @see user_profile_form()
+ */
+function mapan_form_user_profile_form_alter(&$form, &$form_state) {
+  if ($form['#user_category'] == 'account') {
+    $account = $form['#user'];
+    if (user_access('administer users', $account)) {
+      $form['mapan'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Pending approval notifications'),
+        '#weight' => 5,
+        '#collapsible' => TRUE,
+      );
+      $form['mapan']['disable_notify_pending_approval'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Disable pending approval notifications'),
+        '#default_value' => isset($account->data['notify_pending_approval']) ? !$account->data['notify_pending_approval'] : FALSE,
+        '#description' => t('Disable the notifications sent when a new user registers. This setting exists because you have the permission to administer users.'),
+      );
+    }
+  }
+}
+
+/**
+ * Implements hook_user_presave().
+ */
+function mapan_user_presave(&$edit, $account, $category) {
+  $edit['data']['notify_pending_approval'] = empty($edit['disable_notify_pending_approval']);
+}
