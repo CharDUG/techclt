@@ -55,16 +55,16 @@ footer {
 .blurb p,
 .title,
 .field-name-field-profile-name,
-.field-name-field-group-tags .field-label,
-.field-name-field-profile-technologies .field-label,
-.field-name-field-group-meeting-information .field-label,
-.field-name-field-group-technologies .field-label,
+.page-user .field-label,
+.node-group .field-label,
+.node-company .field-label,
 h2,
 h3,
 h4,
 h5,
 h6 {
   font-family: 'vast shadow', serif;
+  font-weight: normal;
 }
 
 .event-title,
@@ -89,7 +89,7 @@ a {
 .main-menu a {
   color: #807d73;
   text-transform: lowercase;
-  font-size: 0.9em;
+  font-size: 1em;
 }
 .main-menu ul li a {
   text-decoration: none;
@@ -229,7 +229,6 @@ footer a:visited {
   -webkit-margin-after: 0.67em;
   -webkit-margin-start: 0px;
   -webkit-margin-end: 0px;
-  font-weight: bold;
   }
 
 .field-name-field-profile-bio {
@@ -237,7 +236,8 @@ footer a:visited {
 }
 
 .field-name-field-profile-links a,
-.field-name-field-group-website a {
+.field-name-field-group-website a,
+.field-name-field-company-website a {
   text-decoration: none;
   font: bold 1em/2em 'Lato', sans-serif;
   color: #fff;
@@ -246,11 +246,11 @@ footer a:visited {
   padding: 0.1em 0.5em 0.3em 2em;
 }
 
-.field-name-field-group-tags .field-label,
-.field-name-field-profile-technologies .field-label,
-.field-name-field-group-meeting-information .field-label,
-.field-name-field-group-technologies .field-label,
-.field-name-field-group-logo .field-item {
+.page-user .field-label,
+.node-group .field-label,
+.node-company .field-label,
+.field-name-field-group-logo .field-item,
+.field-name-field-company-logo .field-item {
   -webkit-margin-before: 1em;
   -webkit-margin-after: 0em;
   -webkit-margin-start: 0px;
@@ -259,13 +259,42 @@ footer a:visited {
 
 .field-name-field-profile-technologies .field-items div,
 .field-name-field-group-tags .field-items div,
-.field-name-field-group-technologies .field-items div {
+.field-name-field-group-technologies .field-items div,
+.field-name-field-company-tags .field-items div,
+.field-name-field-company-technologies .field-items div {
   display: inline;
   padding: 0 0.5em 0 0;
 }
 
 .field-name-field-profile-technologies .field-items a,
 .field-name-field-group-tags .field-items a,
-.field-name-field-group-technologies .field-items a {
+.field-name-field-group-technologies .field-items a,
+.view-groups .views-field-title a,
+.view-companies .views-field-title a {
   color: #FF847F;
+}
+
+.view-groups .views-field-title a,
+.view-companies .views-field-title a {
+  font-weight: bold;
+  font-size: 1.5em;
+  line-height: 1.7em;
+  text-decoration: none;
+}
+
+.view-groups .views-row,
+.view-companies .views-row {
+  border-bottom: 3px solid #807d73;
+}
+
+.views-row .views-field {
+  -webkit-margin-before: 1em;
+  -webkit-margin-after: 0em;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+}
+
+.view-events span.views-field-title {
+  display: block;
+  padding: 0 0 0 1em;
 }
