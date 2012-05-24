@@ -23,6 +23,10 @@
  * $max_date_formatted: The maximum date for this calendar in the format YYYY-MM-DD HH:MM:SS.
  * 
  */
+$header_ids = array();
+foreach ($day_names as $key => $value) {
+  $header_ids[$key] = $value['header_id'];
+}
 //dsm('Display: '. $display_type .': '. $min_date_formatted .' to '. $max_date_formatted);
 ?>
 
@@ -34,7 +38,7 @@
     <tr>
       <th class="calendar-agenda-hour">&nbsp;</th>
       <?php foreach ($day_names as $cell): ?>
-        <th class="<?php print $cell['class']; ?>">
+        <th class="<?php print $cell['class']; ?>" id="<?php print $cell['header_id']; ?>">
           <?php print $cell['data']; ?>
         </th>
       <?php endforeach; ?>
@@ -152,6 +156,7 @@
   </div>
   <div class="header-body-divider">&nbsp;</div>
   <div id="single-day-container">
+    <?php if (!empty($scroll_content)) : ?>
     <script>
       try {
         // Hide container while it renders...  Degrade w/o javascript support
@@ -160,17 +165,18 @@
         // swallow 
       }
     </script>
+    <?php endif; ?>
     <table class="full">
       <tbody>
         <tr class="holder"><td class="calendar-time-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td></tr>
         <tr>
           <?php for ($index = 0; $index < 8; $index++): ?>
           <?php if ($index == 0 ): ?>
-          <td class="first">
+          <td class="first" headers="<?php print $header_ids[$index]; ?>">
           <?php elseif ($index == 7 ) : ?>
-          <td class="last">
+          <td class="last"">
           <?php else : ?>
-          <td>
+          <td headers="<?php print $header_ids[$index]; ?>">
           <?php endif; ?>
             <?php foreach ($start_times as $time_cnt => $start_time): ?>
               <?php 
@@ -186,8 +192,7 @@
               <?php if( $index == 0 ): ?>
               <?php $time = $items[$start_time];?>
               <div class="<?php print $class?>calendar-agenda-hour">
-                <span class="calendar-hour"><?php print $time['hour']; ?></span>
-                <span class="calendar-ampm"><?php print $time['ampm']; ?></span>
+                <span class="calendar-hour"><?php print $time['hour']; ?></span><span class="calendar-ampm"><?php print $time['ampm']; ?></span>
               </div>
               <?php else: ?>
               <div class="<?php print $class?>calendar-agenda-items single-day">
@@ -218,6 +223,7 @@
   </div>
   <div class="single-day-footer">&nbsp;</div>
 </div></div>
+<?php if (!empty($scroll_content)) : ?>
 <script>
 try {
   // Size and position the viewport inline so there are no delays
@@ -230,3 +236,4 @@ try {
   // swallow 
 }
 </script>
+<?php endif; ?>

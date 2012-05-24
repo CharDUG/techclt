@@ -79,12 +79,12 @@ class FeedsHTTPFetcher extends FeedsFetcher {
       catch (Exception $e) {
         // In case of an error, respond with a 503 Service (temporary) unavailable.
         header('HTTP/1.1 503 "Not Found"', NULL, 503);
-        drupal_exit();
+        exit();
       }
     }
     // Will generate the default 200 response.
     header('HTTP/1.1 200 "OK"', NULL, 200);
-    drupal_exit();
+    exit();
   }
 
   /**
@@ -164,15 +164,7 @@ class FeedsHTTPFetcher extends FeedsFetcher {
    */
   public function sourceSave(FeedsSource $source) {
     if ($this->config['use_pubsubhubbub']) {
-      // If this is a feeds node we want to delay the subscription to
-      // feeds_exit() to avoid transaction race conditions.
-      if ($source->feed_nid) {
-        $job = array('fetcher' => $this, 'source' => $source);
-        feeds_set_subscription_job($job);
-      }
-      else {
-        $this->subscribe($source);
-      }
+      $this->subscribe($source);
     }
   }
 
@@ -181,20 +173,7 @@ class FeedsHTTPFetcher extends FeedsFetcher {
    */
   public function sourceDelete(FeedsSource $source) {
     if ($this->config['use_pubsubhubbub']) {
-      // If we're in a feed node, queue the unsubscribe,
-      // else process immediately.
-      if ($source->feed_nid) {
-        $job = array(
-          'type' => $source->id,
-          'id' => $source->feed_nid,
-          'period' => 0,
-          'periodic' => FALSE,
-        );
-        JobScheduler::get('feeds_push_unsubscribe')->set($job);
-      }
-      else {
-        $this->unsubscribe($source);
-      }
+      $this->unsubscribe($source);
     }
   }
 

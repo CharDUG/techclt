@@ -69,17 +69,7 @@ tr:first-child td.module,
 tr:first-child td.container {
   border-top-width: 0;
 }
-#forum tr td.forum {
-  background-image: url(images/forum-default.png);
-  background-position: 5px 5px;
-  padding-left: 30px;
-}
-#forum tr td.forum .name {
-  padding-left: 5px;
-}
-#forum div.indent {
-  margin-left: 7px;
-}
+
 /**
  * Webkit work-around. Uncomment and adjust if you have borders on td.
  */
