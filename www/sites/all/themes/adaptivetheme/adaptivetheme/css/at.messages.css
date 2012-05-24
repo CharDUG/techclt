@@ -61,3 +61,13 @@ a.block-demo-backlink:visited {
 .vertical-tab-button-error a {
   border: 1px solid #FC6F5D;
 }
+body.maintenance-page,
+body.maintenance-page .container {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto 30px;
+}
+body.maintenance-page #header {
+  padding-left: 0;
+  padding-right: 0;
+}

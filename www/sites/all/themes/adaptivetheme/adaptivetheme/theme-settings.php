@@ -765,11 +765,11 @@ function adaptivetheme_form_system_theme_settings_alter(&$form, &$form_state, $f
   $form['at']['classes']['extra-classes'] = array(
     '#type' => 'fieldset',
     '#title' => t('Extra Classes'),
-    '#description' => t('<h3>Add or Remove CSS Classes</h3><p>Many classes are removed by default (unchecked checkbox), to add classes check the checkbox.</p>'),
+    '#description' => t('<h3>Extra CSS Classes</h3>'),
   );
   $form['at']['classes']['extra-classes']['extra_page_classes'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Pages: ') . '<span class="description">' . t('add page-path, add/edit/delete (for workflow states), and a language class (i18n).') . '</span>',
+    '#title' => t('Pages: ') . '<span class="description">' . t('add page-path, add/edit/delete (for workflow states), content type classes, section classes and a language class (i18n).') . '</span>',
     '#default_value' => theme_get_setting('extra_page_classes'),
   );
   $form['at']['classes']['extra-classes']['extra_article_classes'] = array(
@@ -779,12 +779,12 @@ function adaptivetheme_form_system_theme_settings_alter(&$form, &$form_state, $f
   );
   $form['at']['classes']['extra-classes']['extra_comment_classes'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Comments: ') . '<span class="description">' . t('add anonymous, author, viewer, new, odd/even classes and classes for title, user picture and signature handling.') . '</span>',
+    '#title' => t('Comments: ') . '<span class="description">' . t('add anonymous, author, viewer, new, odd/even classes and classes for hidden titles, user picture and signature handling.') . '</span>',
     '#default_value' => theme_get_setting('extra_comment_classes'),
   );
   $form['at']['classes']['extra-classes']['extra_block_classes'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Blocks: ') . '<span class="description">' . t('add odd/even, block region and block count classes.') . '</span>',
+    '#title' => t('Blocks: ') . '<span class="description">' . t('add odd/even (zebra classes), block region and block count classes.') . '</span>',
     '#default_value' => theme_get_setting('extra_block_classes'),
   );
   $form['at']['classes']['extra-classes']['extra_menu_classes'] = array(

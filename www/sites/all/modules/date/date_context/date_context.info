@@ -7,9 +7,10 @@ dependencies[] = date
 dependencies[] = context
 
 files[] = date_context.module
-; Information added by drupal.org packaging script on 2011-12-20
-version = "7.x-2.0-rc1"
+files[] = plugins/date_context_date_condition.inc
+; Information added by drupal.org packaging script on 2012-04-19
+version = "7.x-2.5"
 core = "7.x"
 project = "date"
-datestamp = "1324415138"
+datestamp = "1334835098"
 

@@ -27,57 +27,53 @@ function feeds_ui_menu() {
     'access arguments' => array('administer feeds'),
     'file' => 'feeds_ui.admin.inc',
   );
+  $items['admin/structure/feeds/list'] = array(
+    'title' => 'List',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
   $items['admin/structure/feeds/create'] = array(
-    'title' => 'Add importer',
+    'title' => 'New importer',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('feeds_ui_create_form'),
     'access arguments' => array('administer feeds'),
     'file' => 'feeds_ui.admin.inc',
-    'type' => MENU_LOCAL_ACTION,
-  );
-  $items['admin/structure/feeds/%feeds_importer'] = array(
-    'title callback' => 'feeds_ui_importer_title',
-    'title arguments' => array(3),
-    'page callback' => 'feeds_ui_edit_page',
-    'page arguments' => array(3),
-    'access arguments' => array('administer feeds'),
-    'file' => 'feeds_ui.admin.inc',
-  );
-  $items['admin/structure/feeds/%feeds_importer/edit'] = array(
-    'title' => 'Edit',
-    'page callback' => 'feeds_ui_edit_page',
-    'page arguments' => array(3),
-    'access arguments' => array('administer feeds'),
-    'file' => 'feeds_ui.admin.inc',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'type' => MENU_LOCAL_TASK,
     'weight' => 1,
   );
-  $items['admin/structure/feeds/%feeds_importer/export'] = array(
-    'title' => 'Export',
+  $items['admin/structure/feeds/clone/%feeds_importer'] = array(
+    'title callback' => 'feed_ui_clone_title',
+    'title arguments' => array(4),
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('feeds_ui_export_form', 3),
+    'page arguments' => array('feeds_ui_create_form', 4),
     'access arguments' => array('administer feeds'),
     'file' => 'feeds_ui.admin.inc',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 2,
+    'type' => MENU_CALLBACK,
   );
-  $items['admin/structure/feeds/%feeds_importer/clone'] = array(
-    'title' => 'Clone',
+  $items['admin/structure/feeds/export/%feeds_importer'] = array(
+    'title callback' => 'feed_ui_title',
+    'title arguments' => array(4),
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('feeds_ui_create_form', 3),
+    'page arguments' => array('feeds_ui_export_form', 4),
     'access arguments' => array('administer feeds'),
     'file' => 'feeds_ui.admin.inc',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 3,
+    'type' => MENU_CALLBACK,
   );
-  $items['admin/structure/feeds/%feeds_importer/delete'] = array(
-    'title' => 'Delete',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('feeds_ui_delete_form', 3),
+  $items['admin/structure/feeds/edit/%feeds_importer'] = array(
+    'title callback' => 'feed_ui_title',
+    'title arguments' => array(4),
+    'page callback' => 'feeds_ui_edit_page',
+    'page arguments' => array(4),
     'access arguments' => array('administer feeds'),
     'file' => 'feeds_ui.admin.inc',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 4,
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/structure/feeds/delete/%feeds_importer'] = array(
+    'title' => 'Delete configuration',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('feeds_ui_delete_form', 4),
+    'access arguments' => array('administer feeds'),
+    'file' => 'feeds_ui.admin.inc',
+    'type' => MENU_CALLBACK,
   );
   return $items;
 }
@@ -111,27 +107,15 @@ function feeds_ui_theme() {
 }
 
 /**
- * Implements hook_admin_menu_map().
+ * Title callback.
  */
-function feeds_ui_admin_menu_map() {
-  // Add awareness to the administration menu of the various importers so they
-  // are included in the dropdown menu.
-  if (!user_access('administer feeds')) {
-    return;
-  }
-  $map['admin/structure/feeds/%feeds_importer'] = array(
-    'parent' => 'admin/structure/feeds',
-    'arguments' => array(
-      array('%feeds_importer' => feeds_enabled_importers()),
-    ),
-  );
-
-  return $map;
+function feed_ui_title($importer) {
+  return t('Edit importer: @importer', array('@importer' => $importer->config['name']));
 }
 
 /**
- * Title callback for importers.
+ * Clone title callback.
  */
-function feeds_ui_importer_title($importer) {
-  return t('@importer', array('@importer' => $importer->config['name']));
+function feed_ui_clone_title($importer) {
+  return t('Clone importer: @importer', array('@importer' => $importer->config['name']));
 }

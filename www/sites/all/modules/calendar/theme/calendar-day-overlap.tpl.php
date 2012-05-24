@@ -55,6 +55,7 @@
 </div>
 <div class="header-body-divider">&nbsp;</div>
 <div id="single-day-container">
+  <?php if (!empty($scroll_content)) : ?>
   <script>
     try {
   	  // Hide container while it renders...  Degrade w/o javascript support
@@ -63,6 +64,7 @@
       // swallow 
     }
   </script>
+  <?php endif; ?>
   <table class="full">
     <tbody>
       <tr class="holder">
@@ -84,8 +86,7 @@
                 $class = '';
               } ?>
             <div class="<?php print $class?>calendar-agenda-hour">
-              <span class="calendar-hour"><?php print $hour['hour']; ?></span>
-              <span class="calendar-ampm"><?php print $hour['ampm']; ?></span>
+              <span class="calendar-hour"><?php print $hour['hour']; ?></span><span class="calendar-ampm"><?php print $hour['ampm']; ?></span>
             </div>
           <?php endforeach; ?>   
         </td>
@@ -110,7 +111,13 @@
             <div class="calendar item-wrapper">
             <?php endif; ?>
               <div class="inner">
-               <?php print isset($hour['values'][$column]) ? implode($hour['values'][$column]) : '&nbsp;'; ?>
+               <?php if (!empty($hour['values']) && is_array($hour['values']) && array_key_exists($column, $hour['values'])): ?>
+                 <?php foreach ($hour['values'][$column] as $item): ?>
+                   <?php print $item; ?>
+                 <?php endforeach; ?>
+               <?php else: ?>
+                 <?php print '&nbsp;'; ?>
+               <?php endif; ?>
               </div>
             </div>
           </div>
@@ -122,6 +129,7 @@
 </div>
 <div class="single-day-footer">&nbsp;</div>
 </div></div>
+<?php if (!empty($scroll_content)) : ?>
 <script>
 try {
   // Size and position the viewport inline so there are no delays
@@ -132,3 +140,4 @@ try {
   // swallow 
 }
 </script>
+<?php endif; ?>

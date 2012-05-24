@@ -425,6 +425,8 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
       registry_update();
       // Refresh the schema to include it.
       drupal_get_schema(NULL, TRUE);
+      // Update the theme registry to include it.
+      drupal_theme_rebuild();
       // Clear entity cache.
       entity_info_cache_clear();
 
@@ -539,12 +541,15 @@ function module_disable($module_list, $disable_dependents = TRUE) {
     system_list_reset();
     module_list(TRUE);
     module_implements('', FALSE, TRUE);
+    entity_info_cache_clear();
     // Invoke hook_modules_disabled before disabling modules,
     // so we can still call module hooks to get information.
     module_invoke_all('modules_disabled', $invoke_modules);
     // Update the registry to remove the newly-disabled module.
     registry_update();
     _system_update_bootstrap_status();
+    // Update the theme registry to remove the newly-disabled module.
+    drupal_theme_rebuild();
   }
 
   // If there remains no more node_access module, rebuilding will be
@@ -1017,4 +1022,3 @@ function drupal_alter($type, &$data, &$context1 = NULL, &$context2 = NULL) {
     $function($data, $context1, $context2);
   }
 }
-
