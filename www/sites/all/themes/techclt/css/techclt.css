@@ -54,7 +54,7 @@ footer {
 .main-menu a,
 .blurb p,
 .title,
-.field-name-field-profile-name,
+.profile .field-name-field-profile-name,
 .page-user .field-label,
 .node-group .field-label,
 .node-company .field-label,
@@ -222,7 +222,7 @@ footer a:visited {
   display: none;
 }
 
-.field-name-field-profile-name {
+.profile .field-name-field-profile-name {
   display: block;
   font-size: 2em;
   -webkit-margin-before: 0.67em;
