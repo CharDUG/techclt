@@ -66,6 +66,7 @@
 ?>
     <header class="main-header">
       <div class="container_16">
+        <?php print $messages; ?>
         <div class="frank">
           <div class="left">
             <?php if ($logo): ?>
