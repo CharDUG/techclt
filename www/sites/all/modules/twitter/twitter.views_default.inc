@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @file
+ * Default views for Twitter module.
+ */
 function twitter_views_default_views() {
   $view = new view;
   $view->name = 'tweets';
