@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Views handlers for Twitter module.
+ */
 
 /**
  * Process Twitter-style @usernames and URLs before filtering XSS.
