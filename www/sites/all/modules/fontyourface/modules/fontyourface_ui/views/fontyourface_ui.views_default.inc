@@ -24,7 +24,7 @@ function fontyourface_ui_views_default_views() {
 
   /* Display: Defaults */
   $handler = $view->new_display('default', 'Defaults', 'default');
-  $handler->display->display_options['title'] = 'Browse fonts';
+  $handler->display->display_options['title'] = 'Browse all fonts';
   $handler->display->display_options['use_ajax'] = TRUE;
   $handler->display->display_options['access']['type'] = 'perm';
   $handler->display->display_options['access']['perm'] = 'administer @font-your-face';
@@ -35,7 +35,7 @@ function fontyourface_ui_views_default_views() {
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['exposed_form']['options']['reset_button'] = TRUE;
   $handler->display->display_options['exposed_form']['options']['autosubmit'] = 1;
-  $handler->display->display_options['exposed_form']['options']['autosubmit_hide'] = 1;
+  $handler->display->display_options['exposed_form']['options']['autosubmit_hide'] = 0;
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['pager']['options']['items_per_page'] = '50';
   $handler->display->display_options['pager']['options']['offset'] = '0';
@@ -223,9 +223,7 @@ function fontyourface_ui_views_default_views() {
   $handler->display->display_options['arguments']['provider']['table'] = 'fontyourface_font';
   $handler->display->display_options['arguments']['provider']['field'] = 'provider';
   $handler->display->display_options['arguments']['provider']['title_enable'] = 1;
-  $handler->display->display_options['arguments']['provider']['title'] = 'Browse fonts: %1';
-  $handler->display->display_options['arguments']['provider']['breadcrumb_enable'] = 1;
-  $handler->display->display_options['arguments']['provider']['breadcrumb'] = '@font-your-face %1';
+  $handler->display->display_options['arguments']['provider']['title'] = 'Browse all fonts: %1';
   $handler->display->display_options['arguments']['provider']['default_argument_type'] = 'fixed';
   $handler->display->display_options['arguments']['provider']['default_argument_skip_url'] = 0;
   $handler->display->display_options['arguments']['provider']['summary']['number_of_records'] = '0';
@@ -291,11 +289,11 @@ function fontyourface_ui_views_default_views() {
   $handler = $view->new_display('page', 'Browse', 'page_1');
   $handler->display->display_options['path'] = 'admin/appearance/fontyourface/browse';
   $handler->display->display_options['menu']['type'] = 'tab';
-  $handler->display->display_options['menu']['title'] = 'Browse';
+  $handler->display->display_options['menu']['title'] = 'Browse all fonts';
   $handler->display->display_options['menu']['weight'] = '0';
   $translatables['fontyourface_browse'] = array(
     t('Defaults'),
-    t('Browse fonts'),
+    t('Browse all fonts'),
     t('more'),
     t('Apply'),
     t('Reset'),
@@ -313,8 +311,7 @@ function fontyourface_ui_views_default_views() {
     t('<div class="fontyourface-footer enabled-[enabled_yes_no]" data-fid="[fid]">[enable_disable_link]</div>'),
     t('<div class="fontyourface-preview enabled-[enabled_yes_no]">[preview]</div>'),
     t('All'),
-    t('Browse fonts: %1'),
-    t('@font-your-face %1'),
+    t('Browse all fonts: %1'),
     t('Name'),
     t('Tag'),
     t('Foundry'),
