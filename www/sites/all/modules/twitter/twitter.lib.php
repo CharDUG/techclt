@@ -7,8 +7,17 @@
 /**
  * Exception handling class.
  */
-class TwitterException extends Exception {}
-
+class TwitterException extends Exception {
+  /**
+   * Overrides constructor to log the error.
+   */
+  public function __construct($message = NULL, $code = 0, Exception $previous = NULL) {
+    watchdog('twitter', 'Unexpected error: @message', array(
+      '@message' => $message,
+    ), WATCHDOG_ERROR);
+    parent::__construct($message, $code, $previous);
+  }
+}
 /**
  * Primary Twitter API implementation class
  * Supports the full REST API for twitter.
@@ -106,13 +115,11 @@ class Twitter {
       $params['source'] = $this->source;
     }
     $values = $this->call('statuses/update', $params, 'POST', TRUE);
-
     return new TwitterStatus($values);
   }
 
-
   /**
-   *
+   * Returns profile information about a user.
    * @see http://apiwiki.twitter.com/Twitter-REST-API-Method%3A-users%C2%A0show
    */
   public function users_show($id, $use_auth = TRUE) {
@@ -147,17 +154,11 @@ class Twitter {
   public function call($path, $params = array(), $method = 'GET', $use_auth = FALSE) {
     $url = $this->create_url($path);
 
-    try {
-      if ($use_auth) {
-        $response = $this->auth_request($url, $params, $method);
-      }
-      else {
-        $response = $this->request($url, $params, $method);
-      }
+    if ($use_auth) {
+      $response = $this->auth_request($url, $params, $method);
     }
-    catch (TwitterException $e) {
-      watchdog('twitter', '!message', array('!message' => $e->__toString()), WATCHDOG_ERROR);
-      return FALSE;
+    else {
+      $response = $this->request($url, $params, $method);
     }
 
     if (!$response) {
@@ -207,9 +208,15 @@ class Twitter {
     }
     else {
       $error = $response->error;
-      $data = $this->parse_response($response->data);
-      if (isset($data['error'])) {
-        $error = $data['error'];
+      // Check if Twitter returned an error in the response data.
+      if (isset($response->data)) {
+        $data = $this->parse_response($response->data);
+        if (isset($data['errors'])) {
+          $error = $data['errors'][0]['message'];
+        }
+        elseif (isset($data['error'])) {
+          $error = $data['error'];
+        }
       }
       throw new TwitterException($error);
     }

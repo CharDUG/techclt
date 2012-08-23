@@ -1,4 +1,9 @@
 <?php
+/**
+ * @file
+ *
+ * Page callbacks for Twitter Post module.
+ */
 
 /**
  * Settings form callback

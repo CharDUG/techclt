@@ -143,8 +143,12 @@ function twitter_cron() {
   // that the most out-of-date accounts get updated first.
   module_load_include('inc', 'twitter');
   $result = db_query_range("SELECT twitter_uid FROM {twitter_account} WHERE import = :import ORDER BY last_refresh ASC", 0, 20, array(':import' => 1));
-  foreach ($result as $account) {
-    twitter_fetch_user_timeline($account->twitter_uid);
+  try {
+    foreach ($result as $account) {
+      twitter_fetch_user_timeline($account->twitter_uid);
+    }
+  } catch (TwitterException $e) {
+    // The exception has already been logged so we do not need to do anything here apart from catching it.
   }
 
   // Nuke old statuses.

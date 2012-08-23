@@ -42,10 +42,18 @@ function twitter_actions_set_status($message, $sender) {
   if ($twitter_uid = db_query("SELECT twitter_uid FROM {twitter_account} WHERE uid = :uid", array(':uid' => $sender->uid))->fetchField()) {
     module_load_include('inc', 'twitter');
     $twitter_account = twitter_account_load($twitter_uid);
-    twitter_set_status($twitter_account, $message);
+    try {
+      twitter_set_status($twitter_account, $message);
+      drupal_set_message(t('Successfully posted to Twitter'));
+    }
+    catch (TwitterException $e) {
+      drupal_set_message(t('An error occurred when posting to Twitter: @message',
+                           array('@message' => $e->getMessage())), 'warning');
+    }
   }
   else {
-    watchdog('twitter', 'Twitter authentication failed. Please check your account name and try again.', array(), WATCHDOG_ERROR);
+    watchdog('twitter', 'Could not find the Twitter account to be used for posting. Please review the rule settings.',
+             array(), WATCHDOG_ERROR);
   }
 }
 

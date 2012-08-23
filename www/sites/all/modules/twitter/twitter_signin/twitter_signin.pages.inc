@@ -1,8 +1,11 @@
 <?php
+/**
+ * @file
+ * Page callbacks for Twitter Signin module.
+ */
 
 /**
- * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * Settings form for Twitter Signin.
  */
 function twitter_signin_admin_settings($form, &$form_state) {
   $form = array();

@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * @file
  * Twitter API functions
  */
 
@@ -14,7 +15,7 @@ function twitter_connect($account) {
     return new TwitterOAuth(variable_get('twitter_consumer_key', ''), variable_get('twitter_consumer_secret', ''),
                             $auth['oauth_token'], $auth['oauth_token_secret']);
   }
-  else if ($auth['password']) {
+  elseif ($auth['password']) {
     return new Twitter($account->screen_name, $auth['password']);
   }
   else {
@@ -103,10 +104,17 @@ function twitter_status_save($status) {
 
 /**
  * Post a message to twitter
+ *
+ * @param $twitter_account
+ *   object with a Twitter account.
+ * @param $status
+ *   string message to publish.
+ * @return
+ *   array response from Twitter API.
  */
 function twitter_set_status($twitter_account, $status) {
   $twitter = twitter_connect($twitter_account);
-  $twitter->status_update($status);
+  return $twitter->status_update($status);
 }
 
 /**
