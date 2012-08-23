@@ -52,10 +52,9 @@ function google_fonts_api_fontyourface_preview($font, $text = NULL, $size = 18) 
 } // google_fonts_api_fontyourface_preview
 
 /**
- * Implements template_preprocess_page().
+ * Implements template_preprocess_html().
  */
-function google_fonts_api_preprocess_page(&$vars) {
-
+function google_fonts_api_preprocess_html(&$vars) {
   if (!empty($vars['fontyourface'])) {
 
     $paths = array();
@@ -68,17 +67,19 @@ function google_fonts_api_preprocess_page(&$vars) {
         $metadata = unserialize($used_font->metadata);
 
         $path_parts = explode(':', $metadata['path']);
-        $subsets[$metadata['subset']] = $metadata['subset'];
+
+        $subsets[$path_parts[0]][$metadata['subset']] = $metadata['subset'];
+        $all_subsets[$metadata['subset']] = $metadata['subset'];
 
         if (!isset($paths[$path_parts[0]])) {
           $paths[$path_parts[0]] = array();
         } // if
 
         if (count($path_parts) > 1) {
-          $paths[$path_parts[0]][] = $path_parts[1];
+          $paths[$path_parts[0]][$path_parts[1]] = $path_parts[1];
         } // if
         else {
-          $paths[$path_parts[0]][] = 'regular';
+          $paths[$path_parts[0]]['regular'] = 'regular';
         } // else
 
       } // if
@@ -90,24 +91,16 @@ function google_fonts_api_preprocess_page(&$vars) {
       $families = array();
 
       foreach ($paths as $family => $variants) {
-        $families[] = $family . ':' . implode(',', $variants);
+        $families[$family] = urlencode($family) . ':' . implode(',', $variants);
       } // foreach
 
-      $base = 'http://fonts.googleapis.com/css?family=';
-
-      if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
-        $base = 'https://fonts.googleapis.com/css?family=';
-      } // if
-
-      $url = $base . implode('|', $families) . '&subset=' . implode(',', $subsets);
-      
       if (module_exists('google_webfont_loader_api')) {
 
-        foreach ($families as $family) {
+        foreach ($families as $family => $family_with_variants) {
 
           $font_info = array(
             'name' => 'Google ' . $family,
-            'google_families' => array($family),
+            'google_families' => array($family_with_variants . ':' . implode(',', $subsets[$family])),
           );
 
           _google_webfont_loader_api_load_font($font_info);
@@ -116,14 +109,24 @@ function google_fonts_api_preprocess_page(&$vars) {
 
       } // if
       else {
+
+        $base = 'http://fonts.googleapis.com/css?family=';
+
+        if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
+          $base = 'https://fonts.googleapis.com/css?family=';
+        } // if
+
+        $url = $base . implode('|', $families) . '&subset=' . implode(',', $all_subsets);
+
         fontyourface_add_css_in_preprocess($vars, $url, 'remote');
+
       } // else
 
     } // if
 
   } // if
 
-} // google_fonts_api_preprocess_page
+} // google_fonts_api_preprocess_html
 
 /**
  * Implements hook_fontyourface_import().
@@ -180,10 +183,14 @@ function google_fonts_api_fontyourface_import() {
  */
 function google_fonts_api_views_api() {
 
-  return array(
-    'api' => 2,
-    'path' => drupal_get_path('module', 'google_fonts_api') . '/views',
-  );
+  if (module_exists('fontyourface_ui')) {
+
+    return array(
+      'api' => 2,
+      'path' => drupal_get_path('module', 'google_fonts_api') . '/views',
+    );
+
+  } // if
 
 } // google_fonts_api_views_api
 
