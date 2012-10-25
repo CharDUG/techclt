@@ -1,0 +1,157 @@
+# $Id: fancy_login.pot,v 1.1 2009/07/28 07:03:15 hakulicious Exp $
+#
+# LANGUAGE translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  fancy_login.module: n/a
+#  fancy_login.info: n/a
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2009-07-28 15:56+0900\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: fancy_login.module:84
+msgid "Username"
+msgstr ""
+
+#: fancy_login.module:92
+msgid "Password"
+msgstr ""
+
+#: fancy_login.module:100
+msgid "Log in"
+msgstr ""
+
+#: fancy_login.module:105
+msgid "Create new account"
+msgstr ""
+
+#: fancy_login.module:105
+msgid "Create a new user account."
+msgstr ""
+
+#: fancy_login.module:107
+msgid "Request new password"
+msgstr ""
+
+#: fancy_login.module:107
+msgid "Request new password via e-mail."
+msgstr ""
+
+#: fancy_login.module:128
+msgid "Fancy Login Link"
+msgstr ""
+
+#: fancy_login.module:133;134
+msgid "Login"
+msgstr ""
+
+#: fancy_login.module:143
+msgid "All settings on this page must be valid CSS settings for the item that they will modify. For information on what types of values are valid, check the links included in the descriptions underneath the inputs."
+msgstr ""
+
+#: fancy_login.module:147
+msgid "Screen Fade Color"
+msgstr ""
+
+#: fancy_login.module:152
+msgid "This is the color that the screen fades to when the login box is activated. This should generally be black, white, or the same color as the background of your site. CSS property: !url."
+msgstr ""
+
+#: fancy_login.module:156
+msgid "Login Box Height"
+msgstr ""
+
+#: fancy_login.module:161
+msgid "This is the height of the login box. CSS property: !url."
+msgstr ""
+
+#: fancy_login.module:165
+msgid "Login Box Width"
+msgstr ""
+
+#: fancy_login.module:170
+msgid "This is the width of the login box. CSS property: !url."
+msgstr ""
+
+#: fancy_login.module:174
+msgid "Login Box Background Color"
+msgstr ""
+
+#: fancy_login.module:179
+msgid "This is the background color of the login box. CSS property: !url."
+msgstr ""
+
+#: fancy_login.module:183
+msgid "Login Box Text Color"
+msgstr ""
+
+#: fancy_login.module:188
+msgid "This is the color of the text inside the login box. CSS property: !url."
+msgstr ""
+
+#: fancy_login.module:192
+msgid "Login Box Border Color"
+msgstr ""
+
+#: fancy_login.module:197
+msgid "This is the color of the border around the login box. CSS property: !url."
+msgstr ""
+
+#: fancy_login.module:201
+msgid "Login Box Border Width"
+msgstr ""
+
+#: fancy_login.module:206
+msgid "This is the width of the border around the login box. CSS property: !url."
+msgstr ""
+
+#: fancy_login.module:210
+msgid "Login Box Border Style"
+msgstr ""
+
+#: fancy_login.module:215
+msgid "This is the style (eg: solid, dotted) of the border around the login box. CSS property: !url."
+msgstr ""
+
+#: fancy_login.module:238
+msgid "!field must contain a value."
+msgstr ""
+
+#: fancy_login.module:58
+msgid "Administer fancy login"
+msgstr ""
+
+#: fancy_login.module:32
+msgid "Fancy Login Form"
+msgstr ""
+
+#: fancy_login.module:40
+msgid "Fancy Login Settings"
+msgstr ""
+
+#: fancy_login.module:41
+msgid "Settings for Fancy Login Page"
+msgstr ""
+
+#: fancy_login.module:0
+msgid "fancy_login"
+msgstr ""
+
+#: fancy_login.info:0
+msgid "Fancy Login"
+msgstr ""
+
+#: fancy_login.info:0
+msgid "Creates a fancy javascript based login screen"
+msgstr ""
+

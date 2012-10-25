@@ -1,0 +1,198 @@
+<?php
+// $Id: fancy_login.module,v 1.16 2011/01/25 08:41:24 hakulicious Exp $
+
+/**
+ * Implementation of hook_init()
+ * Loads the javascript on all pages except user/* when the user is not logged in
+ */
+function fancy_login_init()
+{
+	if(user_is_anonymous())
+	{
+		$path = drupal_get_path('module', 'fancy_login');
+		$login_path = drupal_get_path_alias('user/login');
+		$fl_settings = array
+		(
+			'screenFadeColor' => variable_get('screen_fade_color', 'white'),
+			'screenFadeZIndex' => variable_get('screen_fade_z_index', '10'),
+			'loginBoxHeight' => variable_get('login_box_height', 'auto'),
+			'loginBoxWidth' => variable_get('login_box_width', '175px'),
+			'loginBoxBackgroundColor' => variable_get('login_box_background_color', 'white'),
+			'loginBoxTextColor' => variable_get('login_box_text_color', 'black'),
+			'loginBoxBorderColor' => variable_get('login_box_border_color', 'black'),
+			'loginBoxBorderWidth' => variable_get('login_box_border_width', '3px'),
+			'loginBoxBorderStyle' => variable_get('login_box_border_style', 'solid'),
+			'loginPath' => $login_path,
+			'dimFadeSpeed' => (int) variable_get('fancy_login_dim_fade_speed', 500),
+			'boxFadeSpeed' => (int) variable_get('fancy_login_box_fade_speed', 1000),
+			'hideObjects' => variable_get('fancy_login_hide_objects', 0),
+		);
+		if(variable_get('fancy_login_no_redirect', 0))
+		{
+			$fl_settings['destination'] = (variable_get('clean_url', 0)) ? '?' : '&';
+			$fl_settings['destination'] .= 'destination=' . $_GET['q'];
+		}
+		if(variable_get('fancy_login_https', FALSE))
+		{
+			global $base_root;
+			$fl_settings['httpsRoot'] = preg_replace('/http:\/\//', 'https://', $base_root);
+		}
+		$fl_settings['requestDestination'] = (variable_get('clean_url', 0)) ? '?' : '&';
+		$fl_settings['requestDestination'] .= 'destination=' . $_GET['q'];
+		drupal_add_js(array('fancyLogin' => $fl_settings), 'setting');
+		drupal_add_js($path . '/scripts/fancy_login.js');
+		drupal_add_css($path . '/css/fancy_login.css');
+	}
+}
+
+/**
+ * Implementation of hook_menu()
+ */
+function fancy_login_menu()
+{
+	$menu['admin/config/people/fancy_login'] = array
+	(
+		'title' => 'Fancy Login',
+		'description' => 'Settings for Fancy Login Page',
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('fancy_login_settings'),
+		'access arguments' => array('Administer fancy login'),
+		'file' => 'fancy_login.pages.inc',
+	);
+	return $menu;
+}
+
+/**
+ * Implmentation of hook_permission()
+ */
+function fancy_login_permission()
+{
+	return array
+	(
+		'Administer fancy login' => array
+		(
+			'title' => t('Administer fancy login'),
+			'description' => t('Allows users to change the settings for the Fancy Login module'),
+		)
+	);
+}
+
+/**
+ * Implementation of hook_page_alter()
+ */
+function fancy_login_page_alter(&$page)
+{
+    if (user_is_anonymous())
+	{
+		global $base_url;
+		$path = drupal_get_path('module', 'fancy_login');
+		$items = array();
+		if (variable_get('user_register', 1))
+		{
+			$items[] = l(t('Create new account'), 'user/register', array('attributes' => array('title' => t('Create a new user account.'))));
+		}
+		if(!module_exists('noreqnewpass') || !variable_get('noreqnewpass_disabled', FALSE))
+		{
+			$items[] = l(t('Request new password'), 'user/password', array('attributes' => array('title' => t('Request new password via e-mail.'))));
+		}
+		$links = array
+		(
+			'#theme' => 'item_list',
+			'#items' => $items,
+		);
+		$links = (count($items)) ? drupal_render($links) : '';
+		$image_path = $base_url . '/' . $path . '/images/ajax-loader.gif';
+		$markup = '<div id="fancy_login_dim_screen"></div>' .
+			'<div id="fancy_login_login_box">' .
+			'<div id="fancy_login_form_contents">' .
+			'<a href="#" id="fancy_login_close_button">X</a>' .
+			drupal_render(drupal_get_form('user_login')) .
+			$links .
+			'</div>' .
+			'<div id="fancy_login_ajax_loader"><img src="' . $image_path . '" alt="' . t('Loading') . '" /></div>' .
+			'</div>';
+
+		$page['page_bottom']['fancy_login'] = array
+		(
+			'#markup' => $markup,
+		);
+	}
+}
+
+/**
+ * Implementation of hook_form_alter()
+ */
+function fancy_login_form_alter(&$form, &$form_state, $form_id)
+{
+	if($form_id == 'user_login' && variable_get('fancy_login_https', 0))
+	{
+		global $base_url;
+		$icon_position = variable_get('fancy_login_icon_position', 0);
+		if($icon_position)
+		{
+			$icon = theme('ssl_icon', array('base_url' => $base_url));
+			$form['ssl_logo'] = array
+			(
+				'#markup' => $icon,
+			);
+			if($icon_position == 1)
+			{
+				$form['ssl_logo']['#weight'] = -100;
+				$form['#attributes'] = array('class' => 'ssl_icon_above');
+			}
+			elseif($icon_position == 2)
+			{
+				$form['ssl_logo']['#weight'] = 100;
+				$form['#attributes'] = array('class' => 'ssl_icon_below');
+			}
+		}
+	}
+}
+
+/**
+ * Implementation of hook_block_info()
+ */
+function fancy_login_block_info()
+{
+	$blocks['fancy_login_login_block'] = array
+	(
+		'info' => t('Fancy Login Link'),
+		'cache' => DRUPAL_NO_CACHE,
+		'visibility' => 0,
+		'pages' => array('user/login'),
+	);
+	return $blocks;
+}
+
+/**
+ * Implementation of hook_block_view()
+ */
+function fancy_login_block_view($delta = '')
+{
+	if($delta == 'fancy_login_login_block' && user_is_anonymous() && !(arg(0) == 'user' && !is_numeric(arg(1))))
+	{
+		$block['subject'] = t('Login');
+		$block['content'] = l(t('Login'), 'user/login');
+		return $block;
+	}
+}
+
+/**
+ * Implementation of hook_theme()
+ */
+function fancy_login_theme()
+{
+	$path = drupal_get_path('module', 'fancy_login');
+	return array
+	(
+		'ssl_icon' => array
+		(
+			'arguments' => array
+			(
+				'base_url' => NULL,
+			),
+			'path' => $path . '/templates',
+			'template' => 'ssl-icon',
+		),
+	);
+}

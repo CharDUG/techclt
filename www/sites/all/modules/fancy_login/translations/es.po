@@ -1,0 +1,181 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2009-08-09 19:23-0500\n"
+"Last-Translator: SeeD Software <soporte@seed.com.co>\n"
+"Language-Team:  <>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# $Id: es.po,v 1.1 2010/01/18 09:06:31 hakulicious Exp $
+#
+# LANGUAGE translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  fancy_login.module: n/a
+#  fancy_login.info: n/a
+#
+#: fancy_login.module:84
+msgid "Username"
+msgstr "Nombre de usuario"
+
+#: fancy_login.module:92
+msgid "Password"
+msgstr "Contraseña"
+
+#: fancy_login.module:100
+msgid "Log in"
+msgstr "Ingresar"
+
+#: fancy_login.module:105
+msgid "Create new account"
+msgstr "Registrarse"
+
+#: fancy_login.module:105
+msgid "Create a new user account."
+msgstr "Crear una nueva cuenta de usuario."
+
+#: fancy_login.module:107
+msgid "Request new password"
+msgstr "Solicitar nueva contraseña"
+
+#: fancy_login.module:107
+msgid "Request new password via e-mail."
+msgstr "Solicitar nueva contraseña vía e-mail"
+
+#: fancy_login.module:128
+msgid "Fancy Login Link"
+msgstr "Fancy Login Link"
+
+#: fancy_login.module:133;134
+msgid "Login"
+msgstr "Inicio de sesión"
+
+#: fancy_login.module:143
+msgid ""
+"All settings on this page must be valid CSS settings for the item that they "
+"will modify. For information on what types of values are valid, check the "
+"links included in the descriptions underneath the inputs."
+msgstr ""
+"Todos los ajustes en esta página deben ser ajustes de CSS válido para el "
+"ítem que quiera modificar. Para mas información de que tipos de valores son "
+"válidos, revise los enlaces incluidos en las descripciones que se encuentran "
+"debajo de las cajas de formulario."
+
+#: fancy_login.module:147
+msgid "Screen Fade Color"
+msgstr "Color del fundido de pantalla"
+
+#: fancy_login.module:152
+msgid ""
+"This is the color that the screen fades to when the login box is activated. "
+"This should generally be black, white, or the same color as the background "
+"of your site. CSS property: !url."
+msgstr ""
+"Este es el color del fundido de pantalla cuando se activa la caja de inicio "
+"de sesión. Este debería ser generalmente negro, blanco o el mismo color de "
+"fondo de su sitio. Propiedad CSS: !url."
+
+#: fancy_login.module:156
+msgid "Login Box Height"
+msgstr "Altura de la caja de inicio de sesión."
+
+#: fancy_login.module:161
+msgid "This is the height of the login box. CSS property: !url."
+msgstr "Esta es la altura de la caja de inicio de sesión, Propiedad CSS: !url."
+
+#: fancy_login.module:165
+msgid "Login Box Width"
+msgstr "Ancho de la caja de inicio de sesión"
+
+#: fancy_login.module:170
+msgid "This is the width of the login box. CSS property: !url."
+msgstr "Este es el ancho de la caja de inicio de sesión. Propiedad CSS: !url."
+
+#: fancy_login.module:174
+msgid "Login Box Background Color"
+msgstr "Color de fondo de la caja de inicio de sesión"
+
+#: fancy_login.module:179
+msgid "This is the background color of the login box. CSS property: !url."
+msgstr ""
+"Este es el color de fondo de la caja de inicio de sesión. Propiedad CSS: !"
+"url."
+
+#: fancy_login.module:183
+msgid "Login Box Text Color"
+msgstr "Color de texto de la caja de inicio de sesión"
+
+#: fancy_login.module:188
+msgid "This is the color of the text inside the login box. CSS property: !url."
+msgstr ""
+"Este es el color de texto interno de la caja de inicio de sesión. Propiedad "
+"CSS: !url."
+
+#: fancy_login.module:192
+msgid "Login Box Border Color"
+msgstr "Color de borde de la caja de inicio de sesión"
+
+#: fancy_login.module:197
+msgid ""
+"This is the color of the border around the login box. CSS property: !url."
+msgstr ""
+"Este es el color del borde alrededor de la caja de inicio de sesión: "
+"Propiedad CSS: !url."
+
+#: fancy_login.module:201
+msgid "Login Box Border Width"
+msgstr "Ancho del borde de la caja de inicio de sesión"
+
+#: fancy_login.module:206
+msgid ""
+"This is the width of the border around the login box. CSS property: !url."
+msgstr ""
+"Este es el ancho del borde alrededor de la caja de inicio de sesión: "
+"Propiedad CSS: !url."
+
+#: fancy_login.module:210
+msgid "Login Box Border Style"
+msgstr "Estilo del borde la caja de inicio de sesión"
+
+#: fancy_login.module:215
+msgid ""
+"This is the style (eg: solid, dotted) of the border around the login box. "
+"CSS property: !url."
+msgstr ""
+"Este es el estilo (Ej: solid, dotted) del borde alrededor de la caja de "
+"inicio de sesión. Propiedad CSS: !url."
+
+#: fancy_login.module:238
+msgid "!field must contain a value."
+msgstr "!field debe contener un valor."
+
+#: fancy_login.module:58
+msgid "Administer fancy login"
+msgstr "Administrar \"fancy login\""
+
+#: fancy_login.module:32
+msgid "Fancy Login Form"
+msgstr "Formulario de \"Fancy login\""
+
+#: fancy_login.module:40
+msgid "Fancy Login Settings"
+msgstr "Configuración de \"Fancy Login\""
+
+#: fancy_login.module:41
+msgid "Settings for Fancy Login Page"
+msgstr "Ajustes para la página de \"Fancy Login\""
+
+#: fancy_login.module:0
+msgid "fancy_login"
+msgstr "fancy_login"
+
+#: fancy_login.info:0
+msgid "Fancy Login"
+msgstr "Fancy Login"
+
+#: fancy_login.info:0
+msgid "Creates a fancy javascript based login screen"
+msgstr "Crea una elegante caja de ingreso haciendo uso de javascript"
