@@ -1,0 +1,13 @@
+; $Id: fancy_login.info,v 1.2 2011/01/25 08:41:24 hakulicious Exp $
+name = Fancy Login
+description = Creates a fancy javascript based popup login window
+core = 7.x
+
+files[] = fancy_login.module
+files[] = fancy_login.install
+; Information added by drupal.org packaging script on January 1, 1970 - 00:00
+version = "7.x-1.0-beta2"
+core = "7.x"
+project = "fancy_login"
+datestamp = "1296098205"
+
