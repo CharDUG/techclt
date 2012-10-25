@@ -1,0 +1,20 @@
+<?php
+
+// $Id: fancy_login.install,v 1.2 2011/01/25 08:41:24 hakulicious Exp $
+
+function fancy_login_install()
+{
+
+}
+
+function fancy_login_uninstall()
+{
+	variable_del('screen_fade_color');
+	variable_del('login_box_height');
+	variable_del('login_box_width');
+	variable_del('login_box_background_color');
+	variable_del('login_box_text_color');
+	variable_del('login_box_border_color');
+	variable_del('login_box_border_width');
+	variable_del('login_box_border_style');
+}
