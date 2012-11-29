@@ -218,9 +218,9 @@ function _twitter_filter_hashtag($text, $filter) {
  */
 function _twitter_filter_text($text, $prefix, $destination) {
   $matches = array(
-    '/\>' . $prefix . '([a-z0-9_]+)/i',
-    '/^' . $prefix . '([a-z0-9_]+)/i',
-    '/(\s+)' . $prefix . '([a-z0-9_]+)/i',
+    '/\>' . $prefix . '(\w+)/ui',
+    '/^' . $prefix . '(\w+)/ui',
+    '/(\s+)' . $prefix . '(\w+)/ui',
   );
   $replacements = array(
     '><a href="' . $destination . '${1}" target="_blank">' . $prefix . '${1}</a>',
@@ -268,14 +268,6 @@ function twitter_twitter_accounts($account) {
     $twitter_accounts[] = twitter_account_load($twitter_uid);
   }
   return $twitter_accounts;
-}
-
-/**
- * Detect whether we should use oauth. This can probably just go now :)
- */
-function _twitter_use_oauth() {
-  return module_exists('oauth_common') && variable_get('twitter_consumer_key', '') &&
-         variable_get('twitter_consumer_secret', '');
 }
 
 /**

@@ -1,11 +1,11 @@
 <?php
 /**
  * @file
- * Provide better intergration into the rules module
+ * Provides Rules integration in order to post tweets.
  */
 
 /**
- * Implements hook_rules_action_info() on behalf of the twitter module.
+ * Implements hook_rules_action_info() on behalf of the Twitter module.
  */
 function twitter_actions_rules_action_info() {
   return array(
@@ -110,9 +110,9 @@ function twitter_actions_has_linked($element) {
 /**
  * The callback function for the Rules condition
  * @param $element
- *   $element['user']: The user to be checked for.
+ *   $element['text']: The text of the message.
  * @return
- *   TRUE if the user has linked his/her Twitter account.
+ *   TRUE if the message length is less than 141 characters.
  */
 function twitter_actions_less_140($element) {
   return strlen($element['text']) < 141;

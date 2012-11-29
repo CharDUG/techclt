@@ -77,17 +77,6 @@ function twitter_actions_set_status_action_form($context) {
 }
 
 /**
- * Verifies if Oauth module has been setup and also checks the Twitter
- * authentication against the provided screen name.
- */
-function twitter_actions_set_status_action_validate($form, $form_state) {
-  if (!_twitter_use_oauth()) {
-    form_set_error('screen_name', t('Oauth has not been setup yet. Please go to !link and follow steps.',
-                                     array('!link' => l(t('Twitter settings'), 'admin/settings/twitter'))));
-  }
-}
-
-/**
  * Submits the form and sets the twitter account pulling the data from the
  * twitter_account table.
  */
@@ -106,7 +95,7 @@ function twitter_actions_set_status_action_submit($form, $form_state) {
 }
 
 /**
- * Implementation of a configurable Twitter actions.
+ * Implementation of a configurable Twitter action.
  * @todo Implementation for language negotiation for the body and sumary. Also
  * need implementation for bodies with multiple values. Right now it is hard
  * coded and it will only get body and summary for 'und' language and only

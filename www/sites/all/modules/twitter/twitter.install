@@ -7,6 +7,33 @@
  */
 
 /**
+ * Implements hook_requirements()
+ *
+ * Checks the existance of the Twitter REST library
+ */
+function twitter_requirements($phase) {
+  $requirements = array();
+  $t = get_t();
+  if (($phase == 'runtime') || ($phase == 'install')) {
+    $path = 'sites/all/libraries/twitter/twitter.lib.php';
+    $requirements['twitter'] = array('title' => $t('Twitter REST API library'));
+    if (!file_exists($path)) {
+      $requirements['twitter']['value'] = $t('Missing');
+      $requirements['twitter']['description'] = $t('The Twitter REST API is missing. ' .
+        'Download it from ' .
+        '<a href="https://github.com/juampy72/twitter-rest-php" target="_blank">' .
+        'https://github.com/juampy72/twitter-rest-php</a> and place it at !path',
+        array('!path' => $path));
+      $requirements['twitter']['severity'] = REQUIREMENT_ERROR;
+    } else {
+      $requirements['twitter']['value'] = $t('Installed');
+      $requirements['twitter']['severity'] = REQUIREMENT_OK;
+    }
+  }
+  return $requirements;
+}
+
+/**
  * Implements hook_schema().
  */
 function twitter_schema() {
@@ -318,11 +345,19 @@ function twitter_uninstall() {
 }
 
 /**
- * Implements hook_update_N().
- *
  * Removes password field
  */
 function twitter_update_7300() {
   db_drop_field('twitter_account', 'password');
   return t('Password field was removed from Twitter accounts.');
+}
+
+/**
+ * Removes include_retweets field
+ */
+function twitter_update_7301() {
+  if (db_field_exists('twitter_account', 'include_retweets')) {
+    db_drop_field('twitter_account', 'include_retweets');
+    return t('Include Retweets field was removed from Twitter accounts.');
+  }
 }
