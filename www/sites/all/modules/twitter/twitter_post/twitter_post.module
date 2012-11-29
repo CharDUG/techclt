@@ -68,7 +68,7 @@ function twitter_post_form_alter(&$form, $form_state, $form_id) {
       '#id' => 'twitter-toggle',
     );
     $form['twitter'] += $twitter_form;
-    $form['twitter']['status']['#default_value'] = variable_get('twitter_post_default_format', 'New post: !title !tinyurl');
+    $form['twitter']['status']['#default_value'] = variable_get('twitter_post_default_format', 'New post: !title !url-alias');
     $form['twitter']['status']['#description'] = t('The given text will be posted to twitter.com. You can use !url, !url-alias, !tinyurl, !title and !user as replacement text.');
     $form['twitter']['status']['#maxlength'] = 150;
   }
@@ -77,7 +77,7 @@ function twitter_post_form_alter(&$form, $form_state, $form_id) {
 /**
  * Implementation of hook_node_insert().
  *
- * Intercepts newly published nodes and posts noticed to Twitter.
+ * Intercepts newly published nodes and posts notices to Twitter.
  */
 function twitter_post_node_insert($node) {
   if (!empty($node->status) && !empty($node->twitter) && !empty($node->twitter['post'])) {
@@ -98,13 +98,8 @@ function twitter_post_node_insert($node) {
     }
 
     $status = strtr($node->twitter['status'], $replacements);
-    try {
-      twitter_set_status($twitter_account, $status);
+    if (twitter_set_status($twitter_account, $status)) {
       drupal_set_message(t('Successfully posted to Twitter'));
-    }
-    catch (TwitterException $e) {
-      drupal_set_message(t('An error occurred when posting to Twitter: @message',
-                           array('@message' => $e->getMessage())), 'warning');
     }
   }
 }
