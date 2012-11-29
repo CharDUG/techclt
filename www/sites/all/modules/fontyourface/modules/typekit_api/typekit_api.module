@@ -23,20 +23,15 @@ function typekit_api_fontyourface_info() {
 function typekit_api_fontyourface_import() {
   
   $success = TRUE;
-  $logging = variable_get('fontyourface_detailed_logging', FALSE);
   $kits = typekit_api_get_kits();
 
-  if ($logging) {
-    watchdog('@font-your-face', 'Imported Typekit kits: @kits', array('@kits' => print_r($kits, TRUE)), WATCHDOG_INFO);
-  } // if
+  fontyourface_log('Imported Typekit kits: @kits', array('@kits' => print_r($kits, TRUE)));
 
   foreach ($kits as $kit) {
 
     $kit_info = typekit_api_get_kit($kit->id);
 
-    if ($logging) {
-      watchdog('@font-your-face', 'Imported Typekit kit info: @kit', array('@kit' => print_r($kit_info, TRUE)), WATCHDOG_INFO);
-    } // if
+    fontyourface_log('Imported Typekit kit info: @kit', array('@kit' => print_r($kit_info, TRUE)));
 
     if (typekit_api_kit_matches_domain($kit_info, $_SERVER['HTTP_HOST'])) {
 
@@ -46,9 +41,7 @@ function typekit_api_fontyourface_import() {
 
           $variant = typekit_api_get_variant($family_info->id, $variant_id);
 
-          if ($logging) {
-            watchdog('@font-your-face', 'Imported Typekit variant info: @variant', array('@variant' => print_r($variant, TRUE)), WATCHDOG_INFO);
-          } // if
+          fontyourface_log('Imported Typekit variant info: @variant', array('@variant' => print_r($variant, TRUE)));
 
           $metadata = array(
             'typekit_id' => $variant->id,
@@ -77,12 +70,9 @@ function typekit_api_fontyourface_import() {
       } // foreach
 
     } // if
-    elseif ($logging) {
-      $success = FALSE;
-      watchdog('@font-your-face', 'Typekit kit did not match current domain, @domain', array('@domain' => $_SERVER['HTTP_HOST']), WATCHDOG_INFO);
-    } // elseif
     else {
       $success = FALSE;
+      fontyourface_log('Typekit kit did not match current domain, @domain', array('@domain' => $_SERVER['HTTP_HOST']));
     }
   } // foreach
 
@@ -233,8 +223,6 @@ function typekit_api_token_headers() {
  */
 function typekit_api_get_kits() {
 
-  $logging = variable_get('fontyourface_detailed_logging', FALSE);
-
   $kits = array();
 
   $response = drupal_http_request(TYPEKIT_API_BASE_URL . 'kits', array('headers' => typekit_api_token_headers()));
@@ -248,10 +236,7 @@ function typekit_api_get_kits() {
   else {
 
     drupal_set_message(t('There was an error importing kit list from Typekit.'), 'error');
-
-    if ($logging) {
-      watchdog('@font-your-face', 'Invalid drupal_http_request response: @response', array('@response' => print_r($response, TRUE)), WATCHDOG_INFO);
-    } // if
+    fontyourface_log('Invalid drupal_http_request response: @response', array('@response' => print_r($response, TRUE)));
 
   } // else
 
@@ -264,8 +249,6 @@ function typekit_api_get_kits() {
  */
 function typekit_api_get_kit($kit_id) {
 
-  $logging = variable_get('fontyourface_detailed_logging', FALSE);
-
   $response = drupal_http_request(TYPEKIT_API_BASE_URL . 'kits/' . $kit_id, array('headers' => typekit_api_token_headers()));
 
   if ($response->code == 200) {
@@ -277,10 +260,7 @@ function typekit_api_get_kit($kit_id) {
   else {
 
     drupal_set_message(t('There was an error importing a kit (@kit) from Typekit.', array('@kit' => $kit_id)), 'error');
-
-    if ($logging) {
-      watchdog('@font-your-face', 'Invalid drupal_http_request response: @response', array('@response' => print_r($response, TRUE)), WATCHDOG_INFO);
-    } // if
+    fontyourface_log('Invalid drupal_http_request response: @response', array('@response' => print_r($response, TRUE)));
 
   } // else
 
@@ -323,8 +303,6 @@ function typekit_api_kit_matches_domain($kit, $domain) {
  */
 function typekit_api_get_variant($family_id, $variant_id) {
 
-  $logging = variable_get('fontyourface_detailed_logging', FALSE);
-
   $response = drupal_http_request(TYPEKIT_API_BASE_URL . 'families/' . $family_id . '/' . $variant_id, array('headers' => typekit_api_token_headers()));
 
   if ($response->code == 200) {
@@ -336,10 +314,7 @@ function typekit_api_get_variant($family_id, $variant_id) {
   else {
 
     drupal_set_message(t('There was an error importing a variant (@kit, @variant) from Typekit.', array('@kit' => $kit_id, '@variant' => $variant_id)), 'error');
-
-    if ($logging) {
-      watchdog('@font-your-face', 'Invalid drupal_http_request response: @response', array('@response' => print_r($response, TRUE)), WATCHDOG_INFO);
-    } // if
+    fontyourface_log('Invalid drupal_http_request response: @response', array('@response' => print_r($response, TRUE)));
 
   } // else
 

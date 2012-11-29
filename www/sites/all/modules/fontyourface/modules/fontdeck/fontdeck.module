@@ -24,7 +24,7 @@ function fontdeck_fontyourface_import() {
 
   $success = TRUE;
   $project = variable_get('fontdeck_project', '');
-  $domain = preg_replace('#^www.#', '', $_SERVER['HTTP_HOST']);
+  $domain = fontdeck_get_domain();
 
   $project_info_url = FONTDECK_BASE_URL . 'project-info?project=' . $project . '&domain=' . $domain;
 
@@ -37,7 +37,7 @@ function fontdeck_fontyourface_import() {
       $data = json_decode($response->data);
 
       if (isset($data->error)) {
-        drupal_set_message(t($data->error), 'error');
+        drupal_set_message($data->error, 'error');
         return;
       }
 
@@ -179,7 +179,7 @@ function fontdeck_fontyourface_preview($font, $text = NULL, $size = 18) {
 function fontdeck_preprocess_html(&$vars) {
 
   $project = variable_get('fontdeck_project', '');
-  $domain = preg_replace('#^www.#', '', $_SERVER['HTTP_HOST']);
+  $domain = fontdeck_get_domain();
 
   if (!empty($vars['fontyourface']) && $project != '') {
 
@@ -208,3 +208,19 @@ function fontdeck_preprocess_html(&$vars) {
   } // if
 
 } // fontdeck_preprocess_html
+
+/**
+ * Helper function - gets the correct domain for authentication with Fontdeck.
+ */
+function fontdeck_get_domain() {
+
+  // We attempt to parse it as an URL, looking mainly to strip non-standard
+  // port numbers. If it does not parse, it is obviously simple enought to be
+  // used as it is.
+
+  $details = parse_url($_SERVER['HTTP_HOST']);
+  $host = isset($details['host']) ? $details['host'] : $_SERVER['HTTP_HOST'];
+
+  return preg_replace('#^www.#', '', $host);
+
+} // fontdeck_get_domain
