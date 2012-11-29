@@ -276,16 +276,27 @@ function fontyourface_update_7202() {
  */
 function fontyourface_update_7203() {
 
-  db_query("UPDATE {fontyourface_font} SET css_family = REPLACE(css_family, '\'', '');");
+  // Removed - this will not work on SQLite databases.
+  //db_query("UPDATE {fontyourface_font} SET css_family = REPLACE(css_family, '\'', '');");
 
 } // fontyourface_update_7203
+
+/**
+ * Remove single quotes from CSS selectors - properly this time.
+ */
+function fontyourface_update_7204() {
+  db_update('fontyourface_font')
+    ->expression('css_family', "REPLACE(css_family, '''', '')")
+    ->execute();
+}
 
 /**
  * Implements hook_uninstall().
  */
 function fontyourface_uninstall() {
 
+  variable_del('fontyourface_short_preview_text');
   variable_del('fontyourface_detailed_logging');
-  variable_del('fontyourface_css_md5');  
+  variable_del('fontyourface_css_md5');
   
 } // fontyourface_uninstall

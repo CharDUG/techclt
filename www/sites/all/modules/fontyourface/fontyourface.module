@@ -72,9 +72,14 @@ function fontyourface_add_theme_info_fonts() {
                 drupal_set_message(t('The font declaration %declaration that is added to the theme .info file cannot be loaded. Make sure the font exists in the %provider font list.', array('%declaration' => $declaration, '%provider' => $font_provider)), 'error');
 
               } //if
-              else {
+              elseif (module_exists('fontyourface_ui')) {
 
                 drupal_set_message(t('The %provider font that is added to the theme .info file cannot be loaded. This is probably because the import has not been run yet. !import to add fonts.', array('%provider' => check_plain($font_provider), '!import' => l(t('Run import'), 'admin/config/user-interface/fontyourface'))), 'error');
+
+              } // elseif
+              else {
+
+                drupal_set_message(t('The %provider font that is added to the theme .info file cannot be loaded. This is probably because the import has not been run yet. Enable !module module and run import to add fonts.', array('%provider' => check_plain($font_provider), '!module' => l('@font-your-face UI', 'admin/modules', array('fragment' => 'edit-modules-font-your-face')))), 'error');
 
               } // else
 
@@ -121,10 +126,13 @@ function fontyourface_provider_info($font, $info_part = NULL) {
 } // fontyourface_provider_info
 
 /**
- * Returns the amount of fonts that exists in the database
+ * Returns the number of fonts that exist in the database.
  *
- * $provider can be used to filter on provider (eg 'google_fonts_api')
- * @status can be used to filter on status (NULL / TRUE / FALSE)
+ * @param string $provider
+ *   (optional) Filter by provider (e.g. 'google_fonts_api').
+ * @param bool $status
+ *   (optional) Filter by status of the font (NULL = all, TRUE = enabled,
+ *   FALSE = disabled).
  */
 function fontyourface_count_fonts($provider = NULL, $status = NULL) {
 
@@ -135,7 +143,7 @@ function fontyourface_count_fonts($provider = NULL, $status = NULL) {
     $query->condition('provider', $provider);
   } // if
   if (!empty($status)) {
-    $query->condition('status', (int) $status);
+    $query->condition('enabled', (int) $status);
   } // if
 
   $count = $query->execute()->rowCount();
@@ -536,7 +544,7 @@ function fontyourface_short_preview_text($font) {
     return $function($font);
   } // if
 
-  return 'AaGg';
+  return variable_get('fontyourface_short_preview_text', 'AaGg');
 
 } // fontyourface_short_preview_text
 
@@ -667,6 +675,12 @@ function fontyourface_delete_unused_tags() {
 
 /**
  * Logs to watchdog if logging is enabled.
+ *
+ * @param string $message
+ *   Log message. This should be a literal string; see
+ *   http://drupal.org/node/323101 for more details.
+ * @param array $arguments
+ *   Arguments to replace placeholders, if there are any, in $message.
  */
 function fontyourface_log($message, $arguments) {
 

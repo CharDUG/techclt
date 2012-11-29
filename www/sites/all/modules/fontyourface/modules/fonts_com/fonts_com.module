@@ -898,7 +898,7 @@ function fonts_com_fontyourface_short_preview_text($font) {
 
   } // if
 
-  return 'AaGg';
+  return variable_get('fontyourface_short_preview_text', 'AaGg');
 
 } // fonts_com_fontyourface_short_preview_text
 
@@ -982,7 +982,7 @@ function fonts_com_browse_form($form, &$form_state) {
 
     $filter_defaults[$key] = '';
 
-    if (isset($_GET[$key]) && $_GET[$key] != '' && $_GET['op'] != t('Reset')) {
+    if (isset($_GET[$key]) && $_GET[$key] != '' && (!isset($_GET['op']) || $_GET['op'] != t('Reset'))) {
       $filter_defaults[$key] = $_GET[$key];
     } // if
     if (isset($form_state['values'][$key]) && $form_state['values'][$key] != '') {
