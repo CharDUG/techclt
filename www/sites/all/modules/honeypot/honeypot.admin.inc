@@ -44,6 +44,7 @@ function honeypot_admin_form($form, &$form_state) {
       '#default_value' => variable_get('honeypot_time_limit', 5),
       '#required' => TRUE,
       '#size' => 5,
+      '#suffix' => t('seconds'),
     );
 
   // Honeypot Enabled forms.
@@ -99,6 +100,16 @@ function honeypot_admin_form($form, &$form_state) {
         '#type' => 'checkbox',
         '#title' => t('Personal Contact forms'),
         '#default_value' => variable_get('honeypot_form_contact_personal_form', 0),
+      );
+    }
+
+    // If profile.module enabled, add profile forms.
+    if (module_exists('profile')) {
+      $form['enabled_forms']['profile_forms'] = array('#value' => '<h5>' . t('Profile Forms') . '</h5>');
+      $form['enabled_forms']['honeypot_form_user_profile_form'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Profile forms (all)'),
+        '#default_value' => variable_get('honeypot_form_user_profile_form', 0),
       );
     }
 
