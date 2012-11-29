@@ -39,6 +39,16 @@ function honeypot_permission() {
 }
 
 /**
+ * Implements of hook_cron().
+ */
+function honeypot_cron() {
+  // Delete {honeypot_user} entries older than the value of honeypot_expire.
+  db_delete('honeypot_user')
+    ->condition('timestamp', time() - variable_get('honeypot_expire', 300), '<')
+    ->execute();
+}
+
+/**
  * Implements hook_form_alter().
  *
  * Add Honeypot features to forms enabled in the Honeypot admin interface.
@@ -51,13 +61,16 @@ function honeypot_form_alter(&$form, &$form_state, $form_id) {
 
   $unprotected_forms = array(
     'user_login',
+    'search_form',
+    'search_block_form',
+    'views_exposed_form',
   );
 
   // If configured to protect all forms, add protection to every form.
   if (variable_get('honeypot_protect_all_forms', 0) && !in_array($form_id, $unprotected_forms)) {
     // Don't protect system forms - only admins should have access, and system
     // forms may be programmatically submitted by drush and other modules.
-    if (strpos($form_id, 'system_') === FALSE && strpos($form_id, 'search_') === FALSE) {
+    if (strpos($form_id, 'system_') === FALSE && strpos($form_id, 'search_') === FALSE && strpos($form_id, 'views_exposed_form_') === FALSE) {
       honeypot_add_form_protection($form, $form_state, array('honeypot', 'time_restriction'));
     }
   }
@@ -132,16 +145,22 @@ function honeypot_add_form_protection(&$form, &$form_state, $options = array()) 
     $honeypot_element = variable_get('honeypot_element_name', 'homepage');
 
     // Build the honeypot element.
+    $honeypot_class = $honeypot_element . '-textfield';
     $form[$honeypot_element] = array(
       '#type' => 'textfield',
       '#title' => t('Leave this field blank'),
       '#size' => 20,
       '#weight' => 100,
+      '#attributes' => array('autocomplete' => 'off'),
       '#element_validate' => array('_honeypot_honeypot_validate'),
-      '#prefix' => '<div class="honeypot-textfield">',
+      '#prefix' => '<div class="' . $honeypot_class . '">',
       '#suffix' => '</div>',
+      '#attached' => array(
+        'css' => array(
+          '.' . $honeypot_class . ' { display: none !important; }' => array('type' => 'inline'), // Hide honeypot.
+        ),
+      ),
     );
-    drupal_add_css('.honeypot-textfield { display: none !important; }', 'inline'); // Hide honeypot.
   }
 
   // Build the time restriction element (if it's not disabled).
@@ -182,13 +201,15 @@ function _honeypot_time_restriction_validate($form, &$form_state) {
   // Get the time value.
   $honeypot_time = $form_state['values']['honeypot_time'];
 
-  // Get the honeypot_time_limit variable.
-  $time_limit = variable_get('honeypot_time_limit', 5);
+  // Get the honeypot_time_limit.
+  $time_limit = honeypot_get_time_limit($form_state['values']);
 
-  // Make sure the current time - (honeypot_time_limit + form time value) is
-  // greater than 0. If not, throw an error.
+  // Make sure current time - (time_limit + form time value) is greater than 0.
+  // If not, throw an error.
   if (time() < ($honeypot_time + $time_limit)) {
     _honeypot_log($form_state['values']['form_id'], 'honeypot_time');
+    $time_limit = honeypot_get_time_limit();
+    $form_state['values']['honeypot_time'] = time();
     form_set_error('', t('There was a problem with your form submission. Please wait @limit seconds and try again.', array('@limit' => $time_limit)));
   }
 }
@@ -204,6 +225,7 @@ function _honeypot_time_restriction_validate($form, &$form_state) {
  *     - 'honeypot_time'
  */
 function _honeypot_log($form_id, $type) {
+  honeypot_log_failure();
   if (variable_get('honeypot_log', 0)) {
     $variables = array(
         '%form'  => $form_id,
@@ -212,4 +234,57 @@ function _honeypot_log($form_id, $type) {
     watchdog('honeypot', 'Blocked submission of %form due to @cause.', $variables);
   }
   return;
+}
+
+/**
+ * Look up the time limit for the current user.
+ *
+ * @param $form_values
+ *   Array of form values (optional).
+ */
+function honeypot_get_time_limit($form_values = array()) {
+  global $user;
+  $honeypot_time_limit = variable_get('honeypot_time_limit', 5);
+
+  // Only calculate time limit if honeypot_time_limit has a value > 0.
+  if ($honeypot_time_limit) {
+    // Get value from {honeypot_user} table for authenticated users.
+    if ($user->uid) {
+      $number = db_query("SELECT COUNT(*) FROM {honeypot_user} WHERE uid = :uid", array(':uid' => $user->uid))->fetchField();
+    }
+    // Get value from {flood} table for anonymous users.
+    else {
+      $number = db_query("SELECT COUNT(*) FROM {flood} WHERE event = :event AND identifier = :hostname AND timestamp > :time", array(
+        ':event' => 'honeypot',
+        ':hostname' => ip_address(),
+        ':time' => time() - variable_get('honeypot_expire', 300),
+      ))->fetchField();
+    }
+    $honeypot_time_limit = $honeypot_time_limit + (int) exp($number);
+    $additions = module_invoke_all('honeypot_time_limit', $honeypot_time_limit, $form_values, $number);
+    if (count($additions)) {
+      $honeypot_time_limit += array_sum($additions);
+    }
+  }
+  return $honeypot_time_limit;
+}
+
+/**
+ * Log the failed submision with timestamp.
+ */
+function honeypot_log_failure() {
+  global $user;
+  // Log failed submissions for authenticated users.
+  if ($user->uid) {
+    db_insert('honeypot_user')
+      ->fields(array(
+        'uid' => $user->uid,
+        'timestamp' => time(),
+      ))
+      ->execute();
+  }
+  // Register flood event for anonymous users.
+  else {
+    flood_register_event('honeypot');
+  }
 }
