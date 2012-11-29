@@ -229,7 +229,7 @@ function fontsquirrel_fontyourface_enable($font) {
  */
 function fontsquirrel_fontyourface_import() {
 
-  $logging = variable_get('fontyourface_detailed_logging', FALSE);
+  $families = array();
 
   $api_result = drupal_http_request('http://www.fontsquirrel.com/api/fontlist/all');
 
@@ -239,36 +239,95 @@ function fontsquirrel_fontyourface_import() {
 
     foreach ($decoded as $font_import) {
 
-      $metadata = array(
-        'id' => $font_import->id,
-        'path' => $font_import->family_urlname,
-        'font_filename' => $font_import->font_filename,
-      );
+      // If there are multiple variants, add to batch processing array.
+      if ($font_import->family_count > 1) {
+        $families[] = $font_import->family_urlname;
+      }
+      // If there is only one variant, save immediately.
+      else {
+        $metadata = array(
+          'id' => $font_import->id,
+          'path' => $font_import->family_urlname,
+          'font_filename' => $font_import->font_filename,
+        );
 
-      $font = new StdClass;
-      $font->name = $font_import->family_name;
-      $font->url = 'http://www.fontsquirrel.com/fonts/' . $font_import->family_urlname;
-      $font->provider = 'fontsquirrel';
-      $font->foundry = $font_import->foundry_name;
-      $font->foundry_url = 'http://www.fontsquirrel.com/foundry/' . $font_import->foundry_urlname;
-      $font->license = 'See Font Squirrel license page';
-      $font->license_url = 'http://www.fontsquirrel.com/fonts/' . $font_import->family_urlname . '#eula';
-      $font->tags = array($font_import->classification);
-      $font->metadata = serialize($metadata);
+        $font = new StdClass;
+        $font->name = $font_import->family_name;
+        $font->url = 'http://www.fontsquirrel.com/fonts/' . $font_import->family_urlname;
+        $font->provider = 'fontsquirrel';
+        $font->foundry = $font_import->foundry_name;
+        $font->foundry_url = 'http://www.fontsquirrel.com/foundry/' . $font_import->foundry_urlname;
+        $font->license = 'See Font Squirrel license page';
+        $font->license_url = 'http://www.fontsquirrel.com/fonts/' . $font_import->family_urlname . '#eula';
+        $font->tags = array($font_import->classification);
+        $font->metadata = serialize($metadata);
 
-      fontyourface_save_font($font);
+        fontyourface_save_font($font);
 
+      }
     } // foreach
+
+    if (count($families) > 0) {
+      $batch = array(
+        'operations' => array(array('fontsquirrel_batch_import', array($families))),
+        'title' => t('@count font families contain multiple variants', array('@count' => count($families))),
+        'progress_message' => t('Importing variants...'),
+      );
+      batch_set($batch);
+    }
 
   } // if
   else {
 
     drupal_set_message(t('There was an error downloading font list from Font Squirrel.'), 'error');
-
-    if ($logging) {
-      watchdog('@font-your-face', 'Invalid drupal_http_request response: @response', array('@response' => print_r($response, TRUE)), WATCHDOG_INFO);
-    } // if
+    fontyourface_log('Invalid drupal_http_request response: @response', array('@response' => print_r($response, TRUE)));
 
   } // else
 
 } // fontsquirrel_fontyourface_import
+
+/**
+ * Batch processing function - import font variants.
+ */
+function fontsquirrel_batch_import($families, &$context) {
+  if (!isset($context['sandbox']['progress'])) {
+    $context['sandbox']['progress'] = 0;
+    $context['sandbox']['max'] = count($families);
+    $context['sandbox']['families'] = $families;
+  }
+
+  // Import variants of one family.
+  $family = array_shift($context['sandbox']['families']);
+  $variants_raw = drupal_http_request('http://www.fontsquirrel.com/api/familyinfo/' . $family);
+  $variants = json_decode($variants_raw->data);
+  foreach ($variants as $key => $variant) {
+    $metadata = array(
+      'id' => $variant->family_id,
+      'path' => $variant->family_urlname,
+      'font_filename' => $variant->filename,
+    );
+    $font = new StdClass;
+    $font->name = $variant->family_name . ' ' . $variant->style_name;
+    $font->url = 'http://www.fontsquirrel.com/fonts/' . $variant->family_urlname;
+    // To make URL unique, add a fake anchor, except for the first variant.
+    if ($key != 0) {
+      $font->url .= '#' . drupal_strtolower($variant->fontface_name);
+    }
+    $font->css_family = $variant->fontface_name;
+    $font->provider = 'fontsquirrel';
+    $font->foundry = $variant->foundry_name;
+    $font->foundry_url = 'http://www.fontsquirrel.com/foundry/' . $variant->foundry_urlname;
+    $font->license = 'See Font Squirrel license page';
+    $font->license_url = 'http://www.fontsquirrel.com/fonts/' . $variant->family_urlname . '#eula';
+    $font->tags = array($variant->classification);
+    $font->metadata = serialize($metadata);
+    fontyourface_save_font($font);
+  }
+
+  // Update progress indicator.
+  $context['sandbox']['progress']++;
+  if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
+    $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+  }
+
+}
