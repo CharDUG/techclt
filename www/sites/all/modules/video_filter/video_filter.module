@@ -2,8 +2,8 @@
 
 /**
  * @file
- * Video filter is a highly flexible and easy extendable filter module
- * to embed any type of video in your site using a simple tag
+ * Video filter is a highly flexible and easy extendable filter module to embed
+ * any type of video in your site using a simple tag.
  */
 
 module_load_include('inc', 'video_filter', 'video_filter.codecs');
@@ -26,7 +26,8 @@ function video_filter_filter_info() {
       'video_filter_html5' => 1,
     ),
     'tips callback' => '_video_filter_tips',
-    'weight' => -1, // See http://drupal.org/node/1061244
+    // See http://drupal.org/node/1061244.
+    'weight' => -1,
   );
   return $filters;
 }
@@ -85,7 +86,7 @@ function _video_filter_tips($filter, $format, $long = FALSE) {
     $codecs = video_filter_get_codec_info();
     $supported = array();
     $instructions = array();
-    foreach ($codecs AS $codec) {
+    foreach ($codecs as $codec) {
       $supported[] = $codec['name'];
       $instructions[] = isset($codec['instructions']) ? '<li>' . $codec['name'] . ':<br/>' . $codec['instructions'] . '</li>' : '';
     }
@@ -104,7 +105,11 @@ function _video_filter_tips($filter, $format, $long = FALSE) {
       <p>Supported sites: @codecs.</p>
       <p>Special instructions:</p>
       <small>Some codecs need special input. You\'ll find those instructions here.</small>
-      <ul>!instructions</ul>', array('@codecs' => implode(', ', $supported), '!instructions' => implode('', $instructions)));
+      <ul>!instructions</ul>', array(
+        '@codecs' => implode(', ', $supported),
+        '!instructions' => implode('', $instructions),
+      )
+    );
   }
   else {
     return t('You may insert videos with [video:URL]');
@@ -120,50 +125,52 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
         'related' => $filter->settings['video_filter_related'],
       );
 
-      // Pick random out of multiple sources separated by ','
+      // Pick random out of multiple sources separated by comma (,).
       if (strstr($video['source'], ',')) {
         $sources          = explode(',', $video['source']);
         $random           = array_rand($sources, 1);
         $video['source']  = $sources[$random];
       }
 
-      // Load all codecs
+      // Load all codecs.
       $codecs = video_filter_get_codec_info();
 
-      // Find codec
-      foreach ($codecs AS $codec_name => $codec) {
+      // Find codec.
+      foreach ($codecs as $codec_name => $codec) {
         if (!is_array($codec['regexp'])) {
           $codec['regexp'] = array($codec['regexp']);
         }
 
-        // Try different regular expressions
+        // Try different regular expressions.
         foreach ($codec['regexp'] as $delta => $regexp) {
           if (preg_match($regexp, $video['source'], $matches)) {
             $video['codec'] = $codec;
             $video['codec']['delta'] = $delta;
             $video['codec']['matches'] = $matches;
-            $video['codec']['codec_name'] = $codec_name; // used in theme function
+            // Used in theme function:
+            $video['codec']['codec_name'] = $codec_name;
             break 2;
           }
         }
       }
 
-      // Codec found
+      // Codec found.
       if (isset($video['codec'])) {
-        // Override default attributes
+        // Override default attributes.
         if ($matches_code[3][$ci] && preg_match_all('/\s+([a-zA-Z_]+)\:(\s+)?([0-9a-zA-Z\/]+)/i', $matches_code[3][$ci], $matches_attributes)) {
-          foreach ($matches_attributes[0] AS $ai => $attribute) {
+          foreach ($matches_attributes[0] as $ai => $attribute) {
             $video[$matches_attributes[1][$ai]] = $matches_attributes[3][$ai];
           }
         }
 
-        // Use configured ratio if present, use that from the codec otherwise
+        // Use configured ratio if present, otherwise use that from the codec,
+        // if set. Fall back to 1.
         $ratio = 1;
-        if (isset($video['ratio']) && preg_match('/(\d+)\/(\d+)/', $video['ratio'], $tratio) ) {
-          //validate given ratio parameter
+        if (isset($video['ratio']) && preg_match('/(\d+)\/(\d+)/', $video['ratio'], $tratio)) {
+          // Validate given ratio parameter.
           $ratio = $tratio[1] / $tratio[2];
         }
-        else {
+        elseif (isset($video['codec']['ratio'])) {
           $ratio = $video['codec']['ratio'];
         }
 
@@ -187,26 +194,33 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
           $video['height'] = $filter->settings['video_filter_height'] != '' ? $filter->settings['video_filter_height'] : 400;
         }
 
-        // Default value for control bar height
+        // Default value for control bar height.
         $control_bar_height = 0;
         if (isset($video['control_bar_height'])) {
-          // respect control_bar_height option if present
+          // Respect control_bar_height option if present.
           $control_bar_height = $video['control_bar_height'];
         }
         elseif (isset($video['codec']['control_bar_height'])) {
-          // respect setting provided by codec otherwise
+          // Respect setting provided by codec otherwise.
           $control_bar_height = $video['codec']['control_bar_height'];
         }
 
-        // Resize to fit within width and height repecting aspect ratio
+        // Resize to fit within width and height repecting aspect ratio.
         if ($ratio) {
-          $scale_factor = min(array(($video['height']-$control_bar_height), $video['width']/($ratio)));
+          $scale_factor = min(array(
+            ($video['height'] - $control_bar_height),
+            $video['width'] / $ratio,
+          ));
           $video['height'] = round($scale_factor + $control_bar_height);
           $video['width'] = round($scale_factor * $ratio);
         }
 
         $video['autoplay'] = (bool) $video['autoplay'];
-        $video['align'] = (isset($video['align']) && in_array($video['align'], array('left', 'right', 'center'))) ? $video['align'] : NULL;
+        $video['align'] = (isset($video['align']) && in_array($video['align'], array(
+          'left',
+          'right',
+          'center',
+        ))) ? $video['align'] : NULL;
 
         // Let modules have final say on video parameters.
         drupal_alter('video_filter_video', $video);
@@ -218,11 +232,11 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
           $replacement = call_user_func($video['codec']['callback'], $video);
         }
         else {
-          // Invalid callback
+          // Invalid callback.
           $replacement = '<!-- VIDEO FILTER - INVALID CALLBACK IN: ' . $pattern . ' -->';
         }
-      // Invalid format
       }
+      // Invalid format.
       else {
         $replacement = '<!-- VIDEO FILTER - INVALID CODEC IN: ' . $code . ' -->';
       }
@@ -239,6 +253,13 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
  */
 function video_filter_flash($video, $params = array()) {
   return theme('video_filter_flash', array('video' => $video, 'params' => $params));
+}
+
+/**
+ * Wrapper that calls the theme function.
+ */
+function video_filter_iframe($video) {
+  return theme('video_filter_iframe', array('video' => $video));
 }
 
 function video_filter_get_codec_info() {
@@ -261,22 +282,7 @@ function theme_video_filter_flash($variables) {
   $video = $variables['video'];
   $params = isset($variables['params']) ? $variables['params'] : array();
 
-  // Create classes
-  $classes = array(
-    'video-filter',
-    'video-' . $video['codec']['codec_name'],  // Adds codec name
-  );
-
-  // Adds alignment
-  if (isset($video['align'])) {
-    $classes[] = 'video-' . $video['align'];
-  }
-
-  // First match is the URL, we don't want that as a class.
-  unset($video['codec']['matches'][0]);
-  foreach ($video['codec']['matches'] AS $match) {
-    $classes[] = 'vf-' . strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $match));
-  }
+  $classes = video_filter_get_classes($video);
 
   $output .= '<object class="' . implode(' ', $classes) . '" type="application/x-shockwave-flash" ';
 
@@ -300,11 +306,29 @@ function theme_video_filter_flash($variables) {
 }
 
 /**
+ * Function that outputs HTML5 compatible iFrame for codecs that support it.
+ *
+ * @ingroup themeable
+ */
+function theme_video_filter_iframe($variables) {
+  $video = $variables['video'];
+
+  $classes = video_filter_get_classes($video);
+
+  $output = '<iframe src="' . $video['source'] . '" width="' . $video['width'] . '" height="' . $video['height'] . '" class="' . implode(' ', $classes) . '" frameborder="0"></iframe>';
+
+  return $output;
+}
+
+/**
  * Implements hook_theme().
  */
 function video_filter_theme($existing, $type, $theme, $path) {
   return array(
     'video_filter_flash' => array(
+      'variables' => array('video' => NULL, 'params' => NULL),
+    ),
+    'video_filter_iframe' => array(
       'variables' => array('video' => NULL, 'params' => NULL),
     ),
     'video_filter_dashboard' => array(
@@ -315,7 +339,31 @@ function video_filter_theme($existing, $type, $theme, $path) {
 }
 
 /**
- * Implementation of hook_menu().
+ * Helper function that extracts some classes from $video.
+ */
+function video_filter_get_classes($video) {
+  $classes = array(
+    'video-filter',
+    // Add codec name.
+    'video-' . $video['codec']['codec_name'],
+  );
+
+  // Add alignment.
+  if (isset($video['align'])) {
+    $classes[] = 'video-' . $video['align'];
+  }
+
+  // First match is the URL, we don't want that as a class.
+  unset($video['codec']['matches'][0]);
+  foreach ($video['codec']['matches'] as $match) {
+    $classes[] = 'vf-' . strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $match));
+  }
+
+  return $classes;
+}
+
+/**
+ * Implements hook_menu().
  */
 function video_filter_menu() {
   $items = array();
@@ -344,16 +392,16 @@ function _video_filter_dashboard_theme() {
  * Template preprocess function for video_filter_dashboard().
  */
 function template_preprocess_video_filter_dashboard(&$variables) {
-  // Construct page title
-  $variables['head_title']        = t('Video filter dashboard');
-  $variables['head']              = drupal_get_html_head();
-  $variables['help']              = theme('help');
-  $variables['language']          = $GLOBALS['language'];
-  $variables['language']->dir     = $GLOBALS['language']->direction ? 'rtl' : 'ltr';
-  $variables['messages']          = isset($variables['show_messages']) ? theme('status_messages') : '';
-  $variables['css']               = drupal_add_css();
-  $variables['styles']            = drupal_get_css();
-  $variables['scripts']           = drupal_get_js();
+  // Construct page title.
+  $variables['head_title']    = t('Video filter dashboard');
+  $variables['head']          = drupal_get_html_head();
+  $variables['help']          = theme('help');
+  $variables['language']      = $GLOBALS['language'];
+  $variables['language']->dir = $GLOBALS['language']->direction ? 'rtl' : 'ltr';
+  $variables['messages']      = isset($variables['show_messages']) ? theme('status_messages') : '';
+  $variables['css']           = drupal_add_css();
+  $variables['styles']        = drupal_get_css();
+  $variables['scripts']       = drupal_get_js();
 }
 
 /**
@@ -482,6 +530,24 @@ function video_filter_wysiwyg_plugin($editor, $version) {
   $plugins = array();
 
   switch ($editor) {
+    case 'ckeditor':
+      $plugins['video_filter'] = array(
+        'path' => drupal_get_path('module', 'video_filter') . '/editors/ckeditor/',
+        'buttons' => array('video_filter' => t('Video filter')),
+        'url' => 'http://drupal.org/project/video_filter',
+        'load' => TRUE,
+      );
+      break;
+
+    case 'fckeditor':
+      $plugins['video_filter'] = array(
+        'path' => drupal_get_path('module', 'video_filter') . '/editors/fckeditor/',
+        'buttons' => array('video_filter' => t('Video filter')),
+        'url' => 'http://drupal.org/project/video_filter',
+        'load' => TRUE,
+      );
+      break;
+
     case 'tinymce':
       $plugins['video_filter'] = array(
         'path' => drupal_get_path('module', 'video_filter') . '/editors/tinymce',
@@ -491,22 +557,6 @@ function video_filter_wysiwyg_plugin($editor, $version) {
         'load' => TRUE,
       );
       break;
-    case 'ckeditor':
-      $plugins['video_filter'] = array(
-        'path' => drupal_get_path('module', 'video_filter') . '/editors/ckeditor/',
-        'buttons' => array('video_filter' => t('Video filter')),
-        'url' => 'http://drupal.org/project/video_filter',
-        'load' => TRUE,
-      );
-      break;
-    case 'fckeditor':
-      $plugins['video_filter'] = array(
-        'path' => drupal_get_path('module', 'video_filter') . '/editors/fckeditor/',
-        'buttons' => array('video_filter' => t('Video filter')),
-        'url' => 'http://drupal.org/project/video_filter',
-        'load' => TRUE,
-      );
-    break;
   }
 
   return $plugins;
@@ -518,7 +568,7 @@ function video_filter_wysiwyg_plugin($editor, $version) {
 function video_filter_element_info_alter(&$types) {
   if (isset($types['text_format']['#pre_render']) && is_array($types['text_format']['#pre_render'])) {
     if (in_array('ckeditor_pre_render_text_format', $types['text_format']['#pre_render'])) {
-      _video_filter_add_settings('ckeditor');  
+      _video_filter_add_settings('ckeditor');
     }
   }
 }
@@ -530,7 +580,7 @@ function _video_filter_add_settings($editor) {
   if (!isset($editor_settings_added[$editor])) {
     $editor_settings_added[$editor] = TRUE;
 
-    // Add popup url
+    // Add popup url.
     $settings = array(
       'video_filter' => array('url' => array($editor => url('video_filter/dashboard/' . $editor))),
     );
@@ -540,7 +590,7 @@ function _video_filter_add_settings($editor) {
   if (!$global_settings_added) {
     $global_settings_added = TRUE;
 
-    // Add global settings for video_filter
+    // Add global settings for video_filter.
     $settings = array(
       'video_filter' => array(
         'modulepath' => drupal_get_path('module', 'video_filter'),
@@ -551,14 +601,44 @@ function _video_filter_add_settings($editor) {
 }
 
 /**
- * Parses Codec into instructions for WYSIWYG popup
+ * Parses Codec into instructions for WYSIWYG popup.
  */
 function _video_filter_instructions() {
   $codecs = video_filter_get_codec_info();
   $output = '<ul>';
-  foreach ($codecs AS $codec) {
+  foreach ($codecs as $codec) {
     $output .= '<li><strong>' . $codec['name'] . '</strong><br />' . $codec['sample_url'] . '</li>';
   }
   $output .= '</ul>';
   return $output;
+}
+
+/**
+ * Requests data from an oEmbed provider.
+ *
+ * Note: This function currently only supports JSON responses.
+ *
+ * @param string $endpoint
+ *   The provider endpoint URL.
+ * @param array $arguments
+ *   An associative array of URL arguments to send the provider.
+ *
+ * @return array|FALSE
+ *   An array of data if the request is successful, otherwise FALSE.
+ *
+ * @todo Support other response formats than JSON?
+ */
+function video_filter_oembed_request($endpoint, array $arguments) {
+  // Make HTTP request.
+  $result = drupal_http_request(url($endpoint, array('query' => $arguments)));
+
+  if ($data = json_decode($result->data)) {
+    // Success.
+    return (array) $data;
+  }
+  else {
+    // Failure. Either the resource doesn't exist or there was an error with the
+    // request.
+    return FALSE;
+  }
 }
