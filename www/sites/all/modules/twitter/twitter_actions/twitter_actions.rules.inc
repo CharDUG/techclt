@@ -19,9 +19,12 @@ function twitter_actions_rules_action_info() {
           'description' => t("The content of the tweet."),
         ),
         'sender' => array(
-          'type' => 'user',
+          'type' => 'text',
           'label' => t('Sender'),
-          'description' => t("User whose Twitter account will be used."),
+          'description' => t("Twitter account which will be used."),
+          'options list' => '_twitter_rules_account_options',
+          'restriction' => 'input',
+          'default mode' => 'input',
         ),
       ),
       'base' => 'twitter_actions_set_status',
@@ -31,7 +34,18 @@ function twitter_actions_rules_action_info() {
 }
 
 /**
- * Fetches Twitter account info and submits with the message to the Twitter API
+ * Returns the list of Twitter accounts to be used for posting.
+ *
+ * @return
+ *   an array of Twitter accounts.
+ * @see twitter_actions_account_options()
+ */
+function _twitter_rules_account_options(RulesPlugin $element, $param_name) {
+  return twitter_actions_account_options();
+}
+
+/**
+ * Fetches Twitter account info and submits with the message to the Twitter API.
  *
  * @param $message
  *   The message to post
@@ -39,7 +53,8 @@ function twitter_actions_rules_action_info() {
  *   The Drupal user that has a Twitter account
  */
 function twitter_actions_set_status($message, $sender) {
-  if ($twitter_uid = db_query("SELECT twitter_uid FROM {twitter_account} WHERE uid = :uid", array(':uid' => $sender->uid))->fetchField()) {
+  if ($twitter_uid = db_query("SELECT twitter_uid FROM {twitter_account} WHERE screen_name = :screen_name",
+    array(':screen_name' => $sender))->fetchField()) {
     module_load_include('inc', 'twitter');
     $twitter_account = twitter_account_load($twitter_uid);
     try {
@@ -61,23 +76,7 @@ function twitter_actions_set_status($message, $sender) {
  * Implements hook_rules_condition_info().
  */
 function twitter_actions_rules_condition_info() {
-  $defaults = array(
-    'group' => t('Twitter'),
-    'parameter' => array(
-      'user' => array(
-        'type' => 'user',
-        'label' => t('User'),
-        'description' => t('The user to be checked for.'),
-      ),
-    ),
-    'named parameter' => TRUE,
-    'access callback' => 'rules_twitter_actions_access_callback',
-  );
-  $items['rules_core_twitter_conditions_user_has_linked'] = $defaults + array(
-    'label' => t('User has linked Twitter account'),
-    'help' => t('Evaluates to TRUE in case there is a record in the twitter_account for the provided user.'),
-    'base' => 'twitter_actions_has_linked',
-  );
+  $items = array();
 
   $items['rules_core_twitter_conditions_text_is_under_140'] = array(
     'group' => t('Twitter'),
@@ -94,17 +93,6 @@ function twitter_actions_rules_condition_info() {
   );
 
   return $items;
-}
-
-/**
- * The callback function for the Rules condition
- * @param $element
- *   $element['user']: The user to be checked for.
- * @return
- *   TRUE if the user has linked his/her Twitter account.
- */
-function twitter_actions_has_linked($element) {
-  return db_query("SELECT twitter_uid FROM {twitter_account} WHERE uid = :uid", array(':uid' => $element['user']->uid))->fetchField() ? TRUE : FALSE;
 }
 
 /**
