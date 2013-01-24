@@ -36,17 +36,13 @@ function twitter_actions_action_info() {
 /**
  * Returns a form definition so the Twitter action can be configured.
  *
- * @param $context
+ * @param array $context
  *   Default values (if we are editing an existing action instance).
  * @return
  *   Form definition.
  */
 function twitter_actions_set_status_action_form($context) {
-  $options = array();
-  $results = db_query("SELECT screen_name FROM {twitter_account}");
-  foreach ($results as $result) {
-    $options[$result->screen_name] = $result->screen_name;
-  }
+  $options = twitter_actions_account_options();
   // Set default values for form.
   $form['screen_name'] = array(
     '#type' => 'select',
@@ -57,8 +53,9 @@ function twitter_actions_set_status_action_form($context) {
   );
 
   if (!count($options)) {
-    $form['screen_name']['#description'] = t('You first need to add a Twitter account to one of ' .
-                                             'your users with rights for posting to Twitter.');
+    $form['screen_name']['#description'] = t('You first need to ' .
+      '<a href="/admin/config/services/twitter">authenticate a Twitter account</a> ' .
+      'for posting to Twitter.');
   }
 
   $form['message'] = array(
@@ -74,6 +71,22 @@ function twitter_actions_set_status_action_form($context) {
   );
 
   return $form;
+}
+
+/**
+ * Returns a list of authenticated Twitter accounts to be used as options.
+ *
+ * @return
+ *   array of screen_name => screen_name entries.
+ */
+function twitter_actions_account_options() {
+  module_load_include('inc', 'twitter');
+  $twitter_accounts = twitter_load_authenticated_accounts();
+  $options = array();
+  foreach ($twitter_accounts as $twitter_account) {
+    $options[$twitter_account->screen_name] = $twitter_account->screen_name;
+  }
+  return $options;
 }
 
 /**
@@ -132,8 +145,8 @@ function twitter_actions_set_status_action($object, $context) {
           '%node_url' => url('node/' . $node->nid, array('absolute' => TRUE)),
           '%node_type' => node_type_get_name($node),
           '%title' => $node->title,
-          '%summary' => isset($node->body['und'][0]['value']) ? $node->body['und'][0]['summary'] : '',
-          '%body' => isset($node->body['und'][0]['value']) ? $node->body['und'][0]['value'] : '',
+          '%summary' => isset($node->body[LANGUAGE_NONE][0]['value']) ? $node->body['und'][0]['summary'] : '',
+          '%body' => isset($node->body[LANGUAGE_NONE][0]['value']) ? $node->body['und'][0]['value'] : '',
           )
         );
       }
@@ -156,8 +169,8 @@ function twitter_actions_set_status_action($object, $context) {
           '%node_url' => url('node/' . $node->nid, array('absolute' => TRUE)),
           '%node_type' => node_type_get_name($node),
           '%title' => $node->title,
-          '%summary' => isset($node->body['und'][0]['value']) ? $node->body['und'][0]['summary'] : '',
-          '%body' => isset($node->body['und'][0]['value']) ? $node->body['und'][0]['value'] : '',
+          '%summary' => isset($node->body[LANGUAGE_NONE][0]['value']) ? $node->body['und'][0]['summary'] : '',
+          '%body' => isset($node->body[LANGUAGE_NONE][0]['value']) ? $node->body['und'][0]['value'] : '',
           )
         );
       }
