@@ -1,13 +1,11 @@
+var dialog  = window.parent;
+var oEditor = dialog.InnerDialogLoaded();
+var FCK     = oEditor.FCK;
 
-var dialog	= window.parent ;
-var oEditor = dialog.InnerDialogLoaded() ;
-
-var FCK			  = oEditor.FCK ;
-
-dialog.SetAutoSize( true ) ;
+dialog.SetAutoSize(true);
 
 // Activate the "OK" button.
-dialog.SetOkButton( true ) ;
+dialog.SetOkButton(true);
 
 (function ($) {
   $(document).ready(function() {
@@ -22,9 +20,9 @@ dialog.SetOkButton( true ) ;
   });
 })(jQuery);
 
-// The OK button was hit.
+// The "OK" button was hit.
 function Ok() {
-  var sInnerHtml ;
+  var sInnerHtml;
   (function ($) {
     var file_url = $('#edit-file-url').val();
 
@@ -51,7 +49,5 @@ function Ok() {
 
     var text = oEditor.FCK.InsertHtml(str);
    })(jQuery);
-   return true ;
+   return true;
 }
-
-
