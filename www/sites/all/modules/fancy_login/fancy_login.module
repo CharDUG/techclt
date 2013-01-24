@@ -102,11 +102,12 @@ function fancy_login_page_alter(&$page)
 		);
 		$links = (count($items)) ? drupal_render($links) : '';
 		$image_path = $base_url . '/' . $path . '/images/ajax-loader.gif';
-		$markup = '<div id="fancy_login_dim_screen"></div>' .
+    $userLogin = drupal_get_form('user_login');
+    $markup = '<div id="fancy_login_dim_screen"></div>' .
 			'<div id="fancy_login_login_box">' .
 			'<div id="fancy_login_form_contents">' .
 			'<a href="#" id="fancy_login_close_button">X</a>' .
-			drupal_render(drupal_get_form('user_login')) .
+      drupal_render($userLogin) .
 			$links .
 			'</div>' .
 			'<div id="fancy_login_ajax_loader"><img src="' . $image_path . '" alt="' . t('Loading') . '" /></div>' .
