@@ -3,10 +3,15 @@
 function complete_profile_form($form, &$form_state, $account) {
   $form_state['user'] = $account;
   $form['#user'] = $account;
-  $form['#user_category'] = 'account';
+  // Category used by profile module.
+  $form['#user_category'] = 'register';
 
+  // Attach the regular user form.
   user_account_form($form, $form_state);
-  field_attach_form('user', $account, $form, $form_state);
+
+  // Attach the user field form elements.
+  $langcode = function_exists('entity_language') ? entity_language('user', $form['#user']) : NULL;
+  field_attach_form('user', $account, $form, $form_state, $langcode);
 
   $instances = field_info_instances('user', 'user');
   foreach (element_children($form) as $key) {
@@ -16,9 +21,25 @@ function complete_profile_form($form, &$form_state, $account) {
     else {
       if (!empty($instances[$key]['required'])) {
         // If the user has already filled out a value for this field, hide it.
-        if (field_get_items('user', $account, $key)) {
+        if (!complete_profile_field_is_empty('user', $account, $key)) {
           $form[$key]['#access'] = FALSE;
         }
+      }
+      elseif (empty($instances[$key]['user_register_form'])) {
+        // Hide any fields not configured to show up on the registration form.
+        $form[$key]['#access'] = FALSE;
+      }
+    }
+  }
+
+  // Support the deprecated profile module.
+  if (module_exists('profile')) {
+    profile_form_alter($form, $form_state, 'user_register_form');
+    // Determine if each profile field should actually be shown or not.
+    foreach (_profile_get_fields($form['#user_category'], TRUE) as $profile_field) {
+      if (!complete_profile_profile_field_is_empty($account, $profile_field)) {
+        $form[$profile_field->category][$profile_field->name]['#access'] = FALSE;
+        $form[$profile_field->category]['#access'] = (bool) element_get_visible_children($form[$profile_field->category]);
       }
     }
   }
