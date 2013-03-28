@@ -89,7 +89,7 @@ interface EntityReference_BehaviorHandler {
   /**
    * Act after updating an entity reference field.
    *
-   * @see hook_field_attach_insert()
+   * @see hook_field_attach_update()
    */
   public function postUpdate($entity_type, $entity, $field, $instance);
 
@@ -106,6 +106,27 @@ interface EntityReference_BehaviorHandler {
    * @see hook_field_attach_delete()
    */
   public function postDelete($entity_type, $entity, $field, $instance);
+
+  /**
+   * Act after inserting an entity.
+   *
+   * @see hook_entity_insert()
+   */
+  public function entityPostInsert($entity_type, $entity, $field, $instance);
+
+  /**
+   * Act after updating an entity.
+   *
+   * @see hook_entity_update()
+   */
+  public function entityPostUpdate($entity_type, $entity, $field, $instance);
+
+  /**
+   * Act after deleting an entity.
+   *
+   * @see hook_entity_delete()
+   */
+  public function entityPostDelete($entity_type, $entity, $field, $instance);
 
   /**
    * Generate a settings form for this handler.
@@ -166,6 +187,12 @@ abstract class EntityReference_BehaviorHandler_Abstract implements EntityReferen
   public function delete($entity_type, $entity, $field, $instance, $langcode, &$items) {}
 
   public function postDelete($entity_type, $entity, $field, $instance) {}
+
+  public function entityPostInsert($entity_type, $entity, $field, $instance) {}
+
+  public function entityPostUpdate($entity_type, $entity, $field, $instance) {}
+
+  public function entityPostDelete($entity_type, $entity, $field, $instance) {}
 
   public function settingsForm($field, $instance) {}
 
