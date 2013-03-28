@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the TechCLT Feeds Importers feature.
+ */
+
+include_once 'techclt_feeds_importers.features.inc';
