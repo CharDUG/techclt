@@ -38,8 +38,8 @@ function honeypot_schema() {
  * Implements hook_install().
  */
 function honeypot_install() {
-  drupal_set_message(t("Honeypot installed successfully. Please !link to protect your forms from spam bots.", array(
-    '!link' => l(t('configure Honeypot'), 'admin/config/content/honeypot')
+  drupal_set_message(st("Honeypot installed successfully. Please !link to protect your forms from spam bots.", array(
+    '!link' => l(st('configure Honeypot'), 'admin/config/content/honeypot')
   )));
 }
 
@@ -92,7 +92,7 @@ function honeypot_update_7002() {
     if (!empty($types)) {
       foreach ($types as $type) {
         $d7_name = 'honeypot_form_comment_node_' . $type->type . '_form';
-        varaible_set($d7_name, $comment_form_value);
+        variable_set($d7_name, $comment_form_value);
       }
     }
   }
@@ -100,30 +100,33 @@ function honeypot_update_7002() {
 }
 
 /**
- * Add {honeypot_users} database table.
+ * Add {honeypot_users} database table if it doesn't exist.
  */
 function honeypot_update_7003() {
-  $table = array(
-    'description' => 'Table that stores failed attempts to submit a form.',
-    'fields' => array(
-      'uid' => array(
-        'description' => 'Foreign key to {users}.uid; uniquely identifies a Drupal user to whom this ACL data applies.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
+  // Make sure the {honeypot_users} table doesn't already exist.
+  if (!db_table_exists('honeypot_user')) {
+    $table = array(
+      'description' => 'Table that stores failed attempts to submit a form.',
+      'fields' => array(
+        'uid' => array(
+          'description' => 'Foreign key to {users}.uid; uniquely identifies a Drupal user to whom this ACL data applies.',
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ),
+        'timestamp' => array(
+          'description' => 'Date/time when the form submission failed, as Unix timestamp.',
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ),
       ),
-      'timestamp' => array(
-        'description' => 'Date/time when the form submission failed, as Unix timestamp.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
+      'indexes' => array(
+        'uid' => array('uid'),
+        'timestamp' => array('timestamp'),
       ),
-    ),
-    'indexes' => array(
-      'uid' => array('uid'),
-      'timestamp' => array('timestamp'),
-    ),
-  );
+    );
 
-  db_create_table('honeypot_user', $table);
+    db_create_table('honeypot_user', $table);
+  }
 }
