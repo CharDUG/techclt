@@ -134,6 +134,9 @@ function honeypot_get_protected_forms() {
 function honeypot_add_form_protection(&$form, &$form_state, $options = array()) {
   global $user;
 
+  // Allow other modules to alter the protections applied to this form.
+  drupal_alter('honeypot_form_protections', $options, $form);
+
   // Don't add any protections if the user can bypass the Honeypot.
   if (user_access('bypass honeypot protection')) {
     return;
@@ -141,8 +144,8 @@ function honeypot_add_form_protection(&$form, &$form_state, $options = array()) 
 
   // Build the honeypot element.
   if (in_array('honeypot', $options)) {
-    // Get the element name (default is generic 'homepage').
-    $honeypot_element = variable_get('honeypot_element_name', 'homepage');
+    // Get the element name (default is generic 'url').
+    $honeypot_element = variable_get('honeypot_element_name', 'url');
 
     // Build the honeypot element.
     $honeypot_class = $honeypot_element . '-textfield';
@@ -177,6 +180,11 @@ function honeypot_add_form_protection(&$form, &$form_state, $options = array()) 
     if (user_is_anonymous()) {
       $GLOBALS['conf']['cache'] = 0;
     }
+  }
+
+  // Allow other modules to react to addition of form protection.
+  if (!empty($options)) {
+    module_invoke_all('honeypot_add_form_protection', $options, $form['form_id']['#value']);
   }
 }
 
@@ -260,7 +268,8 @@ function honeypot_get_time_limit($form_values = array()) {
         ':time' => time() - variable_get('honeypot_expire', 300),
       ))->fetchField();
     }
-    $honeypot_time_limit = $honeypot_time_limit + (int) exp($number);
+    // Don't add more than 30 days' worth of extra time.
+    $honeypot_time_limit = $honeypot_time_limit + (int) min($honeypot_time_limit + exp($number), 2592000);
     $additions = module_invoke_all('honeypot_time_limit', $honeypot_time_limit, $form_values, $number);
     if (count($additions)) {
       $honeypot_time_limit += array_sum($additions);

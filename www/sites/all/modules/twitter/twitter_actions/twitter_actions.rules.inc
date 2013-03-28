@@ -21,7 +21,9 @@ function twitter_actions_rules_action_info() {
         'sender' => array(
           'type' => 'text',
           'label' => t('Sender'),
-          'description' => t("Twitter account which will be used."),
+          'description' => t('Twitter account which will be used. ' .
+            'By selecting [current user] the rule will check if the user ' .
+            'has authenticated a Twitter account to use.'),
           'options list' => '_twitter_rules_account_options',
           'restriction' => 'input',
           'default mode' => 'input',
@@ -53,22 +55,22 @@ function _twitter_rules_account_options(RulesPlugin $element, $param_name) {
  *   The Drupal user that has a Twitter account
  */
 function twitter_actions_set_status($message, $sender) {
-  if ($twitter_uid = db_query("SELECT twitter_uid FROM {twitter_account} WHERE screen_name = :screen_name",
-    array(':screen_name' => $sender))->fetchField()) {
-    module_load_include('inc', 'twitter');
-    $twitter_account = twitter_account_load($twitter_uid);
-    try {
-      twitter_set_status($twitter_account, $message);
-      drupal_set_message(t('Successfully posted to Twitter'));
-    }
-    catch (TwitterException $e) {
-      drupal_set_message(t('An error occurred when posting to Twitter: @message',
-                           array('@message' => $e->getMessage())), 'warning');
-    }
+  $twitter_uid = _twitter_actions_get_twitter_id($sender);
+  if (!isset($twitter_uid)) {
+    // No Twitter authenticated account found.
+    return;
   }
-  else {
-    watchdog('twitter', 'Could not find the Twitter account to be used for posting. Please review the rule settings.',
-             array(), WATCHDOG_ERROR);
+
+  // Send tweet.
+  module_load_include('inc', 'twitter');
+  $twitter_account = twitter_account_load($twitter_uid);
+  try {
+    twitter_set_status($twitter_account, $message);
+    drupal_set_message(t('Successfully posted to Twitter'));
+  }
+  catch (TwitterException $e) {
+    drupal_set_message(t('An error occurred when posting to Twitter: @message',
+                         array('@message' => $e->getMessage())), 'warning');
   }
 }
 

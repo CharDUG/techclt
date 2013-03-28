@@ -32,7 +32,7 @@ function fontyourface_drush_command() {
     'drupal dependencies' => array('fontyourface'),
     'description' => 'Displays general @font-your-face status information',
     'bootstrap' => DRUSH_BOOTSTRAP_DRUPAL_FULL,
-    'aliases' => array('@s', 'fyfs'),
+    'aliases' => array('fyfs'),
   );
   $items['fyf-import'] = array(
     'callback' => 'fontyourface_fyf_import',
@@ -42,10 +42,10 @@ function fontyourface_drush_command() {
       'providers' => '(optional) A space delimited list of providers.',
     ),
     'bootstrap' => DRUSH_BOOTSTRAP_DRUPAL_FULL,
-    'aliases' => array('@i', 'fyfi'),
+    'aliases' => array('fyfi'),
     'examples' => array(
-      'drush @i' => 'Import fonts from all enabled providers.',
-      'drush @i google_fonts_api fontdeck' => 'Import fonts from Google Fonts API and Fontdeck.',
+      'drush fyfi' => 'Import fonts from all enabled providers.',
+      'drush fyfi google_fonts_api fontdeck' => 'Import fonts from Google Fonts API and Fontdeck.',
     ),
   );
   return $items;

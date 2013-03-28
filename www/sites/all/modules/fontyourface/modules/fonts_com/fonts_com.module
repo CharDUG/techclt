@@ -203,7 +203,6 @@ function fonts_com_preprocess_html(&$vars) {
       foreach (array_keys($projects) as $project) {
 
         drupal_add_js($base . $project . '.js', array('type' => 'external'));
-        $variables['scripts'] = drupal_get_js();
 
       } // foreach
 
@@ -230,7 +229,6 @@ function fonts_com_preprocess_html(&$vars) {
       if ($css != '') {
 
         drupal_add_css($css, array('group' => CSS_THEME, 'type' => 'inline'));
-        $vars['styles'] = drupal_get_css();
 
       } // if
 

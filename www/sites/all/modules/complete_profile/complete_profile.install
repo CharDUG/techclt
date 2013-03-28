@@ -5,4 +5,5 @@
  */
 function complete_profile_uninstall() {
   variable_del('complete_profile_exclude_paths');
+  variable_del('complete_profile_check_timestamp');
 }

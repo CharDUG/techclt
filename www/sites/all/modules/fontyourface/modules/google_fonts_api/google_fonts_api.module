@@ -257,12 +257,10 @@ function _google_fonts_api_convert_api_results($json_font_list) {
         $fonts[$font_id]->license_url = '';
         $fonts[$font_id]->metadata = serialize(array('path' => $json_font->family . ':' . $json_font_variant, 'subset' => $json_font_subset));
         
-        foreach($json_font->subsets as $subset) {
-          $tag_object = new StdClass;
-          $tag_object->type = 'subset';
-          $tag_object->name = $subset;
-          $fonts[$font_id]->tags[] = $tag_object;
-        } //foreach
+        $tag_object = new StdClass;
+        $tag_object->type = 'subset';
+        $tag_object->name = $json_font_subset;
+        $fonts[$font_id]->tags[] = $tag_object;
 
       } //foreach
     } //foreach
