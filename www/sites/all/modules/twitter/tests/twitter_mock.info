@@ -5,9 +5,9 @@ hidden = TRUE
 dependencies[] = twitter
 dependencies[] = simpletest
 
-; Information added by drupal.org packaging script on 2013-01-21
-version = "7.x-5.4"
+; Information added by drupal.org packaging script on 2013-03-13
+version = "7.x-5.6"
 core = "7.x"
 project = "twitter"
-datestamp = "1358789636"
+datestamp = "1363144243"
 
