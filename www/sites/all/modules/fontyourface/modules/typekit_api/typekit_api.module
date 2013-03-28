@@ -111,12 +111,10 @@ function typekit_api_preprocess_html(&$vars) {
       foreach (array_keys($kits) as $kit) {
 
         drupal_add_js($base . $kit . '.js', array('type' => 'external'));
-        $variables['scripts'] = drupal_get_js();
 
       } // foreach
 
       drupal_add_js('try{Typekit.load();}catch(e){}', array('type' => 'inline'));
-      $vars['scripts'] = drupal_get_js();
 
     } // if
 

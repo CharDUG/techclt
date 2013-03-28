@@ -36,7 +36,7 @@ MISCELLANEOUS INFORMATION
 
 -- AVAILABLE FONTS
 
-As of October 2012, there were 862 fonts of 501 families available (see
+As of November 2012, there were 865 fonts of 502 families available (see
 http://www.edgefonts.com/#list-of-available-fonts). There is yet no API to
 provide information on available fonts, so a list is hard-coded into the
 module. If you notice that the list on Adobe's site has changed, file an issue,

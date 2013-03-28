@@ -555,18 +555,24 @@ function fontyourface_ui_settings_form($form, &$form_state) {
       '#type' => 'fieldset',
       '#title' => t('Providers'),
     ),
-    'logging' => array(
+    'advanced' => array(
       '#type' => 'fieldset',
-      '#title' => t('Logging'),
+      '#title' => t('Advanced'),
+      'load_everywhere' => array(
+        '#type' => 'checkbox',
+        '#default_value' => variable_get('fontyourface_load_everywhere', TRUE),
+        '#title' => t('Load fonts in all themes, including admin themes'),
+        '#description' => t('If unchecked, fonts will be loaded only in the default theme.'),
+      ),
       'detailed_logs' => array(
         '#type' => 'checkbox',
         '#default_value' => variable_get('fontyourface_detailed_logging', FALSE),
         '#title' => t('Keep detailed watchdog logs'),
         '#description' => t("Don't leave this on when testing is complete. It will make everything run a bit slower."),
       ),
-      'update_logging' => array(
+      'update_advanced' => array(
         '#type' => 'submit',
-        '#value' => t('Change logging settings'),
+        '#value' => t('Change advanced settings'),
       ),
     ),
     'preview' => array(
@@ -645,8 +651,9 @@ function fontyourface_ui_settings_form($form, &$form_state) {
  */
 function fontyourface_ui_settings_form_submit($form, &$form_state) {
 
-  if ($form_state['clicked_button']['#array_parents'][1] == 'update_logging') {
+  if ($form_state['clicked_button']['#array_parents'][1] == 'update_advanced') {
     variable_set('fontyourface_detailed_logging', $form_state['values']['detailed_logs']);
+    variable_set('fontyourface_load_everywhere', $form_state['values']['load_everywhere']);
     return;
   }
 
@@ -774,7 +781,14 @@ function fontyourface_ui_apply_by_font_form($form, &$form_state) {
     $actionsedit = l(t('Edit'), 'admin/appearance/fontyourface/edit/' . $font->fid, array('query' => array('destination' => 'admin/appearance/fontyourface'), 'attributes' => array('class' => 'edit-link')));
     $actions = l(t('Disable'), 'admin/appearance/fontyourface/disable/' . $font->fid, array('query' => array('destination' => 'admin/appearance/fontyourface'), 'attributes' => array('class' => 'disable-link')));
     if($font->provider == 'local_fonts' && !$font->enabled) {
-      $actions = l(t('Delete'), 'admin/appearance/fontyourface/local_fonts/delete/' . $font->fid, array('query' => array('destination' => 'admin/appearance/fontyourface'), 'attributes' => array('class' => 'disable-link')));
+      $actions = l(t('Enable'), 'admin/appearance/fontyourface/enable/' . $font->fid, array('query' => array('destination' => 'admin/appearance/fontyourface'), 'attributes' => array('class' => 'enable-link')));
+      $actions .= ' - ';
+      $actions .= l(t('Delete'), 'admin/appearance/fontyourface/local_fonts/delete/' . $font->fid, array('query' => array('destination' => 'admin/appearance/fontyourface'), 'attributes' => array('class' => 'disable-link')));
+      $form['table']['row_' . $font->fid]['css_selector[' . $font->fid . ']'] = array(
+        '#prefix' => '<td>',
+        '#markup' => t('Font disabled'),
+        '#suffix' => '</td>',
+      );
     }
     $form['table']['row_' . $font->fid]['disable'] = array(
       '#markup' => '<td>' . $actionsedit . " - " . $actions . '</td>',
@@ -1118,7 +1132,7 @@ function fontyourface_ui_admin_edit_form($form, &$form_state, $fid) {
 
     $form['details'] += array(
       'foundry' => array(
-        '#value' => '<div class="foundry">' . t('Foundry: !foundry', array('!foundry' => $foundry_markup)) . '</div>',
+        '#markup' => '<div class="foundry">' . t('Foundry: !foundry', array('!foundry' => $foundry_markup)) . '</div>',
       ),
     );
 
@@ -1135,7 +1149,7 @@ function fontyourface_ui_admin_edit_form($form, &$form_state, $fid) {
 
     $form['details'] += array(
       'license' => array(
-        '#value' => '<div class="license">' . t('License: !license', array('!license' => $license_markup)) . '</div>',
+        '#markup' => '<div class="license">' . t('License: !license', array('!license' => $license_markup)) . '</div>',
       ),
     );
 
@@ -1178,7 +1192,7 @@ function fontyourface_ui_admin_edit_form($form, &$form_state, $fid) {
 
     $form += array(
       'font-family' => array(
-        '#value' => '<div>' . t('To apply in your own CSS, use:') . '</div><div><code>font-family: ' . check_plain($font->css_family) . ';</code></div>',
+        '#markup' => '<div>' . t('To apply in your own CSS, use:') . '</div><div><code>font-family: ' . check_plain($font->css_family) . ';</code></div>',
       ),
     );
 

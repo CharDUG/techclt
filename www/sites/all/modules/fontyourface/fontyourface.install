@@ -297,6 +297,7 @@ function fontyourface_uninstall() {
 
   variable_del('fontyourface_short_preview_text');
   variable_del('fontyourface_detailed_logging');
+  variable_del('fontyourface_load_everywhere');
   variable_del('fontyourface_css_md5');
-  
+
 } // fontyourface_uninstall

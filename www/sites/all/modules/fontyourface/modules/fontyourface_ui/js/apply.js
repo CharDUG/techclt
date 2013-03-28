@@ -17,7 +17,7 @@
 
         if (select.find('option[value="' + selector + '"]').length > 0) {
 
-          select.find('option[value=' + selector + ']').attr('selected', true);
+          select.find('option[value="' + selector + '"]').attr('selected', true);
           input.hide();
 
         } // if

@@ -264,6 +264,11 @@ function fontsquirrel_fontyourface_import() {
 
         fontyourface_save_font($font);
 
+        // Add a tag if this is a monocase font.
+        if ($font_import->is_monocase == 'Y') {
+          fontyourface_add_tags_to_font(array('monocase'), $font->fid);
+        }
+
       }
     } // foreach
 
@@ -322,6 +327,11 @@ function fontsquirrel_batch_import($families, &$context) {
     $font->tags = array($variant->classification);
     $font->metadata = serialize($metadata);
     fontyourface_save_font($font);
+
+    // Add a tag if this is a monocase font.
+    if ($variant->is_monocase == 'Y') {
+      fontyourface_add_tags_to_font(array('monocase'), $font->fid);
+    }
   }
 
   // Update progress indicator.

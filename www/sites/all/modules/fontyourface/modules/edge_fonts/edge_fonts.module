@@ -25,22 +25,22 @@ function edge_fonts_fontyourface_import() {
   $families = edge_fonts_list();
   $variants = 0;
   foreach ($families as $family_name => $family) {
-    foreach ($family['variants'] as $variant => $variant_name) {
+    foreach ($family['variants'] as $fvd => $variant) {
       $font = new stdClass();
       $font->provider = 'edge_fonts';
-      $font->name = $family['fontname'] . ' ' . $variant_name;
+      $font->name = $family['name'] . ' ' . $variant['name'];
       $font->css_family = $family_name;
-      $font->css_weight = $variant[1] . '00';
-      if ($variant[0] == 'i') {
+      $font->css_weight = $fvd[1] . '00';
+      if ($fvd[0] == 'i') {
         $font->css_style = 'italic';
       }
       $metadata = array(
-        'variant' => $variant,
+        'variant' => $fvd,
       );
       $font->metadata = serialize($metadata);
-      $font->url = 'http://www.edgefonts.com/?font=' . $family_name . ':' . $variant . '#list-of-available-fonts';
-      $font->license = 'Terms of Use';
-      $font->license_url = 'http://www.edgefonts.com/#terms';
+      $font->url = 'http://www.edgefonts.com/?font=' . $family_name . ':' . $fvd . '#list-of-available-fonts';
+      $font->license = 'Font license';
+      $font->license_url = $variant['license'];
       fontyourface_save_font($font);
       $variants++;
     }

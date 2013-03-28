@@ -157,11 +157,19 @@ function fontyourface_count_fonts($provider = NULL, $status = NULL) {
  */
 function fontyourface_preprocess_html(&$vars) {
 
+  // Only load fonts when the default theme is loaded.
+  if (!variable_get('fontyourface_load_everywhere', TRUE)) {
+    global $theme;
+    if ($theme != variable_get('theme_default', 'bartik')) {
+      return;
+    }
+  }
+
   $fonts = fontyourface_font_registry() + fontyourface_get_fonts();
 
   $css = fontyourface_generate_css($fonts);
   $css_md5 = md5($css);
-  
+
   if ($css_md5 != variable_get('fontyourface_css_md5', '')) {
 
     fontyourface_rewrite_css($css);
@@ -181,7 +189,7 @@ function fontyourface_preprocess_html(&$vars) {
  * Generates CSS.
  */
 function fontyourface_generate_css($fonts = FALSE) {
-  
+
   // Get font list.
 
   if (!$fonts) {
@@ -219,7 +227,7 @@ function fontyourface_rewrite_css($css) {
   if (file_prepare_directory($destination_directory, FILE_CREATE_DIRECTORY)) {
     file_unmanaged_save_data($css, $destination, FILE_EXISTS_REPLACE);
   } // if
-  
+
 } // fontyourface_rewrite_css
 
 /**
@@ -230,7 +238,6 @@ function fontyourface_add_css_in_preprocess(&$vars, $css_path, $type = 'public')
   if ($type == 'remote') {
 
     drupal_add_css($css_path, array('type' => 'external', 'group' => CSS_THEME));
-    $vars['styles'] = drupal_get_css();
 
   } // if
   else {
@@ -242,7 +249,6 @@ function fontyourface_add_css_in_preprocess(&$vars, $css_path, $type = 'public')
     } // if
 
     drupal_add_css($css_path, array('group' => CSS_THEME, 'basename' => 'fontyourface-' . md5($css_path)));
-    $vars['styles'] = drupal_get_css();
 
   } // else
 
@@ -259,7 +265,7 @@ function fontyourface_get_fonts($where = "enabled = 1 AND css_selector != ''", $
 
   while ($result = $results->fetchObject()) {
     fontyourface_add_font_tags($result);
-    $fonts[] = $result;
+    $fonts[$result->fid] = $result;
   } // while
 
   return $fonts;
@@ -485,13 +491,11 @@ function fontyourface_add_tags_to_font($tags, $fid) {
 
     fontyourface_save_tag($tag_object);
 
-    $tag_font = new StdClass;
-    $tag_font->tid = $tag_object->tid;
-    $tag_font->fid = $fid;
+    db_merge('fontyourface_tag_font')
+      ->key(array('tid' => $tag_object->tid, 'fid' => $fid))
+      ->execute();
 
-    drupal_write_record('fontyourface_tag_font', $tag_font);
-
-  } // forach
+  } // foreach
 
 } // fontyourface_add_tags_to_font
 
