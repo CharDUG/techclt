@@ -1,6 +1,114 @@
 
 ****************************** DRUPAL 7 - 2.x BRANCH ********************************
 
+February 19, 2013
+-----------------
+7.x-2.1
+
+October 26, 2012
+----------------
+Issue #1817854 by troky: Fixed divide by zero in topic pager initialization.
+Issue #1823770 by GBurg: Added node type to topic icon template.
+
+October 23, 2012
+----------------
+Issue #1537826 by troky: Changed forum image detection mechanism.
+Issue #1812966 by troky: Fixed date format in theme.inc.
+Issue #1817854 by jakelitwicki: Fixed topic pager initialization.
+Issue #1730740 by troky: Fixed JavaScript error in IE8.
+
+October 18, 2012
+----------------
+Issue #1812966 by troky: Fixed theme variables in advanced_forum_preprocess_forum_submitted().
+
+September 25, 2012
+------------------
+Issue #1779000 by troky: Unset core forum menu_local_tasks_alter hook to prevent calling forum_forum_load().
+
+September 21, 2012
+------------------
+Issue #1775248 by dmitriytrt: Fixed breadcrumb generation for Page manager page.
+Issue #1783340 by troky: Returned $forums variable to forum-list template.
+
+August 28, 2012
+---------------
+Issue #418992 by troky: Fixed 'mark as read' function.
+
+August 24, 2012
+---------------
+by troky: Performance improvements as per http://drupal.org/node/145353
+
+August 12, 2012
+---------------
+Issue #1711680 by troky: Fixed Post reply button visible with no permissions to reply with Forum Access.
+
+August 11, 2012
+---------------
+Issue #1724080 by troky: Fixed wrong post position displayed in topic replies when comments displaed in threaded mode.
+by troky: Views re-exported to version 3.0.
+
+August 08, 2012
+---------------
+Issue #1705628 by Scyther: Update integration for Author Pane.
+Issue #1689236 by victoriachan: Fixed Undefined index: teaser in _template_preprocess_advanced_forum_topic_list_view().
+Issue #1719156 by clude: Fixed terms localization.
+
+July 16, 2012
+-------------
+Issue #1668740 by deviantintegral: Limit the count query to only node types that can actually be associated with the forum vocabulary.
+
+July 05, 2012
+-------------
+Issue #1121208 by vidu_ram: Added default configuration for collapsible container.
+Issue #962218 by troky: Changed strings to match core forum module.
+
+July 01, 2012
+-------------
+Issue #1635800 by troky: Redone online users count.
+
+June 29, 2012
+-------------
+Issue #1632260 by mcdruid, troky: Fixed performance issues with advanced_forum_statistics_replies.
+Issue #1617840 by liquidcms: Added forum term translation support.
+
+June 12, 2012
+-------------
+Issue #1621218 by sebcorbin: Fixed notices when non-forum associated content types are used.
+
+June 09, 2012
+-------------
+Issue #1621956 by samsouk: Added missing "topics per page" parameter to forum list view.
+
+June 02, 2012
+-------------
+Issue #210453 by troky: Added drop down list of forum hierarchy as template variable $forum_jump.
+
+June 01, 2012
+-------------
+Issue #1612710 by troky: Fixed new post icon css in Blue lagoon style.
+
+May 14, 2012
+------------
+Issue #1218894 by tomfriedhof: Removed Panels related conditional from Views preprocess function.
+Issue #1218894 by troky: Fixed advanced_forum_forum_disabled variable function in registry.
+
+May 13, 2012
+------------
+by troky: Panels adjusted and reexported.
+Issue #1212964 by troky: CTools plugins redone/updated to D7 with bugfixes.
+
+May 03, 2012
+------------
+Issue #1559340 by troky: Fixed notice while displaying orphaned forum shadow topic.
+
+March 31, 2012
+--------------
+Issue #1506628 by BTMash: Added [Content Type Name] button localization.
+
+March 19, 2012
+-----------------
+7.x-2.0 RELEASE
+
 March 01, 2012
 -----------------
 by troky: Fixed undefined variable introduced in previous patch.
