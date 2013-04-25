@@ -90,15 +90,15 @@
       </div>
     </header>
 
-    <?php if ($breadcrumb): ?>
-      <div id="breadcrumb" class="container_12"><?php print $breadcrumb; ?></div>
-    <?php endif; ?>
-
-    <?php print $messages; ?>
-
     <div id="main-wrapper"><div id="main" class="clearfix">
 
       <div role="main" class="container_12">
+
+        <?php if ($breadcrumb): ?>
+        <div id="breadcrumb" class="container_12"><?php print $breadcrumb; ?></div>
+        <?php endif; ?>
+
+        <?php print $messages; ?>
 
         <?php if ($page['sidebar_first']): ?>
           <div id="sidebar-first" class="column sidebar grid_3"><div class="section">
