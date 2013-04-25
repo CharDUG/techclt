@@ -26,6 +26,10 @@ header {
   margin: 1.75em 0;
 }
 
+div.messages {
+  margin-bottom: 20px;
+}
+
 .blurb {
   padding: 3em 0;
 }
