@@ -32,7 +32,6 @@ function techclt_feeds_importers_feeds_importer_default() {
     'processor' => array(
       'plugin_key' => 'FeedsNodeProcessor',
       'config' => array(
-        'content_type' => 'events',
         'expire' => '-1',
         'author' => 0,
         'mappings' => array(
@@ -59,6 +58,7 @@ function techclt_feeds_importers_feeds_importer_default() {
         ),
         'update_existing' => '1',
         'input_format' => 'filtered_html',
+        'bundle' => 'events',
       ),
     ),
     'content_type' => '',
@@ -92,7 +92,6 @@ function techclt_feeds_importers_feeds_importer_default() {
     'processor' => array(
       'plugin_key' => 'FeedsNodeProcessor',
       'config' => array(
-        'content_type' => 'events',
         'expire' => '-1',
         'author' => 0,
         'mappings' => array(
@@ -119,6 +118,7 @@ function techclt_feeds_importers_feeds_importer_default() {
         ),
         'update_existing' => '1',
         'input_format' => 'filtered_html',
+        'bundle' => 'events',
       ),
     ),
     'content_type' => '',
@@ -152,7 +152,6 @@ function techclt_feeds_importers_feeds_importer_default() {
     'processor' => array(
       'plugin_key' => 'FeedsNodeProcessor',
       'config' => array(
-        'content_type' => 'events',
         'expire' => '-1',
         'author' => 0,
         'mappings' => array(
@@ -179,6 +178,7 @@ function techclt_feeds_importers_feeds_importer_default() {
         ),
         'update_existing' => '1',
         'input_format' => 'filtered_html',
+        'bundle' => 'events',
       ),
     ),
     'content_type' => '',
@@ -212,7 +212,6 @@ function techclt_feeds_importers_feeds_importer_default() {
     'processor' => array(
       'plugin_key' => 'FeedsNodeProcessor',
       'config' => array(
-        'content_type' => 'events',
         'expire' => '-1',
         'author' => 0,
         'mappings' => array(
@@ -239,6 +238,7 @@ function techclt_feeds_importers_feeds_importer_default() {
         ),
         'update_existing' => '1',
         'input_format' => 'filtered_html',
+        'bundle' => 'events',
       ),
     ),
     'content_type' => '',
@@ -263,6 +263,7 @@ function techclt_feeds_importers_feeds_importer_default() {
         'auto_detect_feeds' => FALSE,
         'use_pubsubhubbub' => FALSE,
         'designated_hub' => '',
+        'request_timeout' => NULL,
       ),
     ),
     'parser' => array(
@@ -272,7 +273,6 @@ function techclt_feeds_importers_feeds_importer_default() {
     'processor' => array(
       'plugin_key' => 'FeedsNodeProcessor',
       'config' => array(
-        'content_type' => 'events',
         'update_existing' => '1',
         'expire' => '-1',
         'mappings' => array(
@@ -292,25 +292,31 @@ function techclt_feeds_importers_feeds_importer_default() {
             'unique' => FALSE,
           ),
           3 => array(
-            'source' => 'timestamp',
-            'target' => 'field_event_date_time:start',
-            'unique' => FALSE,
-          ),
-          4 => array(
             'source' => 'url',
             'target' => 'field_url:url',
             'unique' => FALSE,
           ),
-          5 => array(
+          4 => array(
             'source' => 'published',
             'target' => 'created',
             'unique' => FALSE,
           ),
+          5 => array(
+            'source' => 'timestamp',
+            'target' => 'field_event_date_time_new:start',
+            'unique' => FALSE,
+          ),
+          6 => array(
+            'source' => 'timestamp',
+            'target' => 'field_event_date_time_new:end',
+            'unique' => FALSE,
+          ),
         ),
-        'input_format' => 'plain_text',
+        'input_format' => 'full_html',
         'author' => '1',
-        'authorize' => 1,
+        'authorize' => 0,
         'skip_hash_check' => 0,
+        'bundle' => 'events',
       ),
     ),
     'content_type' => '',
@@ -344,7 +350,6 @@ function techclt_feeds_importers_feeds_importer_default() {
     'processor' => array(
       'plugin_key' => 'FeedsNodeProcessor',
       'config' => array(
-        'content_type' => 'events',
         'expire' => '-1',
         'author' => 0,
         'mappings' => array(
@@ -371,6 +376,7 @@ function techclt_feeds_importers_feeds_importer_default() {
         ),
         'update_existing' => '1',
         'input_format' => 'filtered_html',
+        'bundle' => 'events',
       ),
     ),
     'content_type' => '',
@@ -404,7 +410,6 @@ function techclt_feeds_importers_feeds_importer_default() {
     'processor' => array(
       'plugin_key' => 'FeedsNodeProcessor',
       'config' => array(
-        'content_type' => 'events',
         'expire' => '-1',
         'author' => 0,
         'mappings' => array(
@@ -431,6 +436,7 @@ function techclt_feeds_importers_feeds_importer_default() {
         ),
         'update_existing' => '1',
         'input_format' => 'filtered_html',
+        'bundle' => 'events',
       ),
     ),
     'content_type' => '',
@@ -464,7 +470,6 @@ function techclt_feeds_importers_feeds_importer_default() {
     'processor' => array(
       'plugin_key' => 'FeedsNodeProcessor',
       'config' => array(
-        'content_type' => 'events',
         'expire' => '-1',
         'author' => 0,
         'mappings' => array(
@@ -491,6 +496,7 @@ function techclt_feeds_importers_feeds_importer_default() {
         ),
         'update_existing' => '1',
         'input_format' => 'filtered_html',
+        'bundle' => 'events',
       ),
     ),
     'content_type' => '',
@@ -524,7 +530,6 @@ function techclt_feeds_importers_feeds_importer_default() {
     'processor' => array(
       'plugin_key' => 'FeedsNodeProcessor',
       'config' => array(
-        'content_type' => 'events',
         'expire' => '-1',
         'author' => 0,
         'mappings' => array(
@@ -551,6 +556,7 @@ function techclt_feeds_importers_feeds_importer_default() {
         ),
         'update_existing' => '1',
         'input_format' => 'filtered_html',
+        'bundle' => 'events',
       ),
     ),
     'content_type' => '',
@@ -584,7 +590,6 @@ function techclt_feeds_importers_feeds_importer_default() {
     'processor' => array(
       'plugin_key' => 'FeedsNodeProcessor',
       'config' => array(
-        'content_type' => 'events',
         'expire' => '-1',
         'author' => 0,
         'mappings' => array(
@@ -611,6 +616,7 @@ function techclt_feeds_importers_feeds_importer_default() {
         ),
         'update_existing' => '1',
         'input_format' => 'filtered_html',
+        'bundle' => 'events',
       ),
     ),
     'content_type' => '',
@@ -644,7 +650,6 @@ function techclt_feeds_importers_feeds_importer_default() {
     'processor' => array(
       'plugin_key' => 'FeedsNodeProcessor',
       'config' => array(
-        'content_type' => 'events',
         'expire' => '-1',
         'author' => 0,
         'mappings' => array(
@@ -671,6 +676,7 @@ function techclt_feeds_importers_feeds_importer_default() {
         ),
         'update_existing' => '1',
         'input_format' => 'filtered_html',
+        'bundle' => 'events',
       ),
     ),
     'content_type' => '',
@@ -704,7 +710,6 @@ function techclt_feeds_importers_feeds_importer_default() {
     'processor' => array(
       'plugin_key' => 'FeedsNodeProcessor',
       'config' => array(
-        'content_type' => 'events',
         'expire' => '-1',
         'author' => 0,
         'mappings' => array(
@@ -731,6 +736,7 @@ function techclt_feeds_importers_feeds_importer_default() {
         ),
         'update_existing' => '1',
         'input_format' => 'filtered_html',
+        'bundle' => 'events',
       ),
     ),
     'content_type' => '',
@@ -764,7 +770,6 @@ function techclt_feeds_importers_feeds_importer_default() {
     'processor' => array(
       'plugin_key' => 'FeedsNodeProcessor',
       'config' => array(
-        'content_type' => 'events',
         'expire' => '-1',
         'author' => 0,
         'mappings' => array(
@@ -791,6 +796,7 @@ function techclt_feeds_importers_feeds_importer_default() {
         ),
         'update_existing' => '1',
         'input_format' => 'filtered_html',
+        'bundle' => 'events',
       ),
     ),
     'content_type' => '',
@@ -824,7 +830,6 @@ function techclt_feeds_importers_feeds_importer_default() {
     'processor' => array(
       'plugin_key' => 'FeedsNodeProcessor',
       'config' => array(
-        'content_type' => 'events',
         'expire' => '-1',
         'author' => 0,
         'mappings' => array(
@@ -851,6 +856,7 @@ function techclt_feeds_importers_feeds_importer_default() {
         ),
         'update_existing' => '1',
         'input_format' => 'filtered_html',
+        'bundle' => 'events',
       ),
     ),
     'content_type' => '',
@@ -884,7 +890,6 @@ function techclt_feeds_importers_feeds_importer_default() {
     'processor' => array(
       'plugin_key' => 'FeedsNodeProcessor',
       'config' => array(
-        'content_type' => 'events',
         'expire' => '-1',
         'author' => 0,
         'mappings' => array(
@@ -911,6 +916,7 @@ function techclt_feeds_importers_feeds_importer_default() {
         ),
         'update_existing' => '1',
         'input_format' => 'filtered_html',
+        'bundle' => 'events',
       ),
     ),
     'content_type' => '',
@@ -944,7 +950,6 @@ function techclt_feeds_importers_feeds_importer_default() {
     'processor' => array(
       'plugin_key' => 'FeedsNodeProcessor',
       'config' => array(
-        'content_type' => 'events',
         'expire' => '-1',
         'author' => 0,
         'mappings' => array(
@@ -971,6 +976,7 @@ function techclt_feeds_importers_feeds_importer_default() {
         ),
         'update_existing' => '1',
         'input_format' => 'filtered_html',
+        'bundle' => 'events',
       ),
     ),
     'content_type' => '',
@@ -1004,7 +1010,6 @@ function techclt_feeds_importers_feeds_importer_default() {
     'processor' => array(
       'plugin_key' => 'FeedsNodeProcessor',
       'config' => array(
-        'content_type' => 'events',
         'expire' => '-1',
         'author' => 0,
         'mappings' => array(
@@ -1031,6 +1036,7 @@ function techclt_feeds_importers_feeds_importer_default() {
         ),
         'update_existing' => '1',
         'input_format' => 'filtered_html',
+        'bundle' => 'events',
       ),
     ),
     'content_type' => '',
@@ -1064,12 +1070,12 @@ function techclt_feeds_importers_feeds_importer_default() {
     'processor' => array(
       'plugin_key' => 'FeedsNodeProcessor',
       'config' => array(
-        'content_type' => 'article',
         'expire' => -1,
         'author' => 0,
         'mappings' => array(),
         'update_existing' => 0,
         'input_format' => NULL,
+        'bundle' => 'article',
       ),
     ),
     'content_type' => '',
@@ -1103,7 +1109,6 @@ function techclt_feeds_importers_feeds_importer_default() {
     'processor' => array(
       'plugin_key' => 'FeedsNodeProcessor',
       'config' => array(
-        'content_type' => 'events',
         'expire' => '-1',
         'author' => 0,
         'mappings' => array(
@@ -1130,6 +1135,7 @@ function techclt_feeds_importers_feeds_importer_default() {
         ),
         'update_existing' => '1',
         'input_format' => 'filtered_html',
+        'bundle' => 'events',
       ),
     ),
     'content_type' => '',
@@ -1163,7 +1169,6 @@ function techclt_feeds_importers_feeds_importer_default() {
     'processor' => array(
       'plugin_key' => 'FeedsNodeProcessor',
       'config' => array(
-        'content_type' => 'events',
         'expire' => '-1',
         'author' => 0,
         'mappings' => array(
@@ -1190,6 +1195,7 @@ function techclt_feeds_importers_feeds_importer_default() {
         ),
         'update_existing' => '1',
         'input_format' => 'filtered_html',
+        'bundle' => 'events',
       ),
     ),
     'content_type' => '',
@@ -1223,7 +1229,6 @@ function techclt_feeds_importers_feeds_importer_default() {
     'processor' => array(
       'plugin_key' => 'FeedsNodeProcessor',
       'config' => array(
-        'content_type' => 'events',
         'expire' => '-1',
         'author' => 0,
         'mappings' => array(
@@ -1250,6 +1255,7 @@ function techclt_feeds_importers_feeds_importer_default() {
         ),
         'update_existing' => '1',
         'input_format' => 'filtered_html',
+        'bundle' => 'events',
       ),
     ),
     'content_type' => '',
@@ -1283,7 +1289,6 @@ function techclt_feeds_importers_feeds_importer_default() {
     'processor' => array(
       'plugin_key' => 'FeedsNodeProcessor',
       'config' => array(
-        'content_type' => 'events',
         'expire' => '-1',
         'author' => 0,
         'mappings' => array(
@@ -1310,6 +1315,7 @@ function techclt_feeds_importers_feeds_importer_default() {
         ),
         'update_existing' => '1',
         'input_format' => 'filtered_html',
+        'bundle' => 'events',
       ),
     ),
     'content_type' => '',
@@ -1343,7 +1349,6 @@ function techclt_feeds_importers_feeds_importer_default() {
     'processor' => array(
       'plugin_key' => 'FeedsNodeProcessor',
       'config' => array(
-        'content_type' => 'events',
         'expire' => '-1',
         'author' => 0,
         'mappings' => array(
@@ -1370,6 +1375,7 @@ function techclt_feeds_importers_feeds_importer_default() {
         ),
         'update_existing' => '1',
         'input_format' => 'filtered_html',
+        'bundle' => 'events',
       ),
     ),
     'content_type' => '',
@@ -1403,7 +1409,6 @@ function techclt_feeds_importers_feeds_importer_default() {
     'processor' => array(
       'plugin_key' => 'FeedsNodeProcessor',
       'config' => array(
-        'content_type' => 'events',
         'expire' => '-1',
         'author' => 0,
         'mappings' => array(
@@ -1430,6 +1435,7 @@ function techclt_feeds_importers_feeds_importer_default() {
         ),
         'update_existing' => '1',
         'input_format' => 'filtered_html',
+        'bundle' => 'events',
       ),
     ),
     'content_type' => '',
@@ -1463,7 +1469,6 @@ function techclt_feeds_importers_feeds_importer_default() {
     'processor' => array(
       'plugin_key' => 'FeedsNodeProcessor',
       'config' => array(
-        'content_type' => 'events',
         'expire' => '-1',
         'author' => 0,
         'mappings' => array(
@@ -1490,6 +1495,7 @@ function techclt_feeds_importers_feeds_importer_default() {
         ),
         'update_existing' => '1',
         'input_format' => 'filtered_html',
+        'bundle' => 'events',
       ),
     ),
     'content_type' => '',
@@ -1523,7 +1529,6 @@ function techclt_feeds_importers_feeds_importer_default() {
     'processor' => array(
       'plugin_key' => 'FeedsNodeProcessor',
       'config' => array(
-        'content_type' => 'events',
         'expire' => '-1',
         'author' => 0,
         'mappings' => array(
@@ -1550,6 +1555,7 @@ function techclt_feeds_importers_feeds_importer_default() {
         ),
         'update_existing' => '1',
         'input_format' => 'filtered_html',
+        'bundle' => 'events',
       ),
     ),
     'content_type' => '',
@@ -1583,7 +1589,6 @@ function techclt_feeds_importers_feeds_importer_default() {
     'processor' => array(
       'plugin_key' => 'FeedsNodeProcessor',
       'config' => array(
-        'content_type' => 'events',
         'expire' => '-1',
         'author' => 0,
         'mappings' => array(
@@ -1610,6 +1615,7 @@ function techclt_feeds_importers_feeds_importer_default() {
         ),
         'update_existing' => '1',
         'input_format' => 'filtered_html',
+        'bundle' => 'events',
       ),
     ),
     'content_type' => '',
@@ -1643,7 +1649,6 @@ function techclt_feeds_importers_feeds_importer_default() {
     'processor' => array(
       'plugin_key' => 'FeedsNodeProcessor',
       'config' => array(
-        'content_type' => 'events',
         'expire' => '-1',
         'author' => 0,
         'mappings' => array(
@@ -1670,6 +1675,7 @@ function techclt_feeds_importers_feeds_importer_default() {
         ),
         'update_existing' => '1',
         'input_format' => 'filtered_html',
+        'bundle' => 'events',
       ),
     ),
     'content_type' => '',
@@ -1703,7 +1709,6 @@ function techclt_feeds_importers_feeds_importer_default() {
     'processor' => array(
       'plugin_key' => 'FeedsNodeProcessor',
       'config' => array(
-        'content_type' => 'events',
         'expire' => '-1',
         'author' => 0,
         'mappings' => array(
@@ -1730,6 +1735,7 @@ function techclt_feeds_importers_feeds_importer_default() {
         ),
         'update_existing' => '1',
         'input_format' => 'filtered_html',
+        'bundle' => 'events',
       ),
     ),
     'content_type' => '',
@@ -1763,7 +1769,6 @@ function techclt_feeds_importers_feeds_importer_default() {
     'processor' => array(
       'plugin_key' => 'FeedsNodeProcessor',
       'config' => array(
-        'content_type' => 'events',
         'expire' => '-1',
         'author' => 0,
         'mappings' => array(
@@ -1790,6 +1795,7 @@ function techclt_feeds_importers_feeds_importer_default() {
         ),
         'update_existing' => '1',
         'input_format' => 'filtered_html',
+        'bundle' => 'events',
       ),
     ),
     'content_type' => '',
@@ -1823,7 +1829,6 @@ function techclt_feeds_importers_feeds_importer_default() {
     'processor' => array(
       'plugin_key' => 'FeedsNodeProcessor',
       'config' => array(
-        'content_type' => 'events',
         'expire' => '-1',
         'author' => 0,
         'mappings' => array(
@@ -1850,6 +1855,7 @@ function techclt_feeds_importers_feeds_importer_default() {
         ),
         'update_existing' => '1',
         'input_format' => 'filtered_html',
+        'bundle' => 'events',
       ),
     ),
     'content_type' => '',
